@@ -1,43 +1,60 @@
 # agentic-browser
 
-An agent-first browser with an integrated context store, written in Rust.
+Research into browser engine design for agent consumption: a native MCP
+interface over the page representation, and a searchable local-first archive of
+visited pages.
 
-**Status:** design. No code yet.
+**There is no code.** This repository contains design decisions, a design
+document for the tool surface, and a threat model.
 
 ---
 
-## What this is
+## The problem
 
-Two paths exist today for giving an agent a web page, and both are compromises.
-The thin path fetches HTML and converts it to text — no JavaScript, no session,
-no interaction, no layout. The thick path puppeteers a headless Chromium
-through Playwright — slow, brittle, heavyweight, and conceptually a
-puppet-string layer over a browser built for human eyes, reaching back in to
-recover structure the engine already computed and discarded.
+Two mechanisms exist for giving an agent a web page.
 
-**No browser exists whose native output is agent-shaped.** That gap is what
-this is for.
+The first fetches HTML over HTTP and converts it to text. No JavaScript
+executes, so client-rendered pages return an empty shell. There is no session,
+no interaction, and no layout.
 
-Alongside it, a context store: not bookmarks, which save a pointer that rots,
-but the page itself — content as captured, full-text searchable, with the
-context of why it was saved and what it relates to. An agent that can search
-your own library is more useful than one that can search the web, because the
-library is already filtered by your judgement.
+The second drives a headless Chromium through an automation framework such as
+Playwright. JavaScript executes and sessions persist, at the cost of latency,
+brittleness, and a large dependency. Structurally it is a control layer above a
+browser built for human output: the engine parses HTML, builds a DOM, computes
+layout and rasterises for a display, and the automation framework then queries
+back into it to recover structure the engine had already computed.
 
-The two turn out to be one piece of engineering with two consumers.
+Neither mechanism is a browser whose native output is intended for a program.
 
-## Shape
+## Goal
 
-- Conventional render pipeline — network → parse → style → layout → paint →
-  composite. Scope held by supporting a subset of CSS, not by inventing an
-  intermediate format.
-- Storage is content-addressed blobs on disk plus SQLite; FTS5 for search.
-- MCP is the integration surface. The human UI is a client of the same internal
-  API.
-- Human feature set deliberately thin: URL bar, back/forward, viewport,
-  find-in-page.
-- Phase 1 runs no JavaScript. Capture uses a headless browser, so the archive
-  holds post-JS content.
+An engine that produces an agent-addressable representation directly, exposed
+over MCP, together with an archive of what has been read.
+
+The archive stores captured content rather than URLs, indexed for full-text
+search, with the circumstances of capture and the relationships between pages.
+The two halves share a pipeline — fetch, parse, store, retrieve — so they are
+treated as one piece of engineering with two consumers rather than as separate
+components.
+
+## Decisions taken so far
+
+Recorded in [`docs/adr/`](docs/adr/), with the reasoning and the rejected
+alternatives.
+
+- A conventional render pipeline: network, parse HTML, parse CSS, style,
+  layout, paint, composite. Scope is bounded by supporting a subset of CSS
+  rather than by introducing an intermediate format.
+- Storage as content-addressed blobs on disk with SQLite for metadata and
+  indexing; FTS5 for search.
+- MCP as the integration surface, with the human-facing UI implemented as a
+  client of the same internal API.
+- A deliberately minimal human feature set: URL bar, back and forward,
+  viewport, find-in-page.
+- No JavaScript engine in the first phase. Capture runs through a headless
+  browser, so the archive holds post-JavaScript content.
+- Parsing, style, layout and paint perform no I/O, which keeps process
+  isolation available as a later refactor rather than a rewrite.
 
 ## Documentation
 
@@ -65,7 +82,7 @@ author does not know Rust yet. Success is measured as understanding rather than
 shipping. See ADR 0001 for that framing and the risks it carries.
 
 It is public because open source was a deliberate choice rather than an
-afterthought, not because it is ready for anyone to use. There is no code yet.
+afterthought, not because it is ready for anyone to use.
 
 ## Licence
 
