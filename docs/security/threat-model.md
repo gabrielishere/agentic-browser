@@ -38,6 +38,8 @@ later", which on a solo part-time project means never.
 | **Before the archive stores any authenticated page** | T5 and T6 mitigated. |
 | **Before any `act` tool exists** (click, type, submit) | T4 has a written answer. Not "be careful" — a mechanism. |
 | **Before the repository is public** | T9 reviewed; no secrets in history. |
+| **Before the first snapshot is saved** | T5 as amended has an answer — O8 resolved, denylist decided either way. |
+| **Before Phase 2 begins** (a JavaScript engine, D19) | T11 mitigated. Every snapshot already stored is in scope, not just new ones. |
 
 ---
 
@@ -105,9 +107,17 @@ one that must have a real mechanism — not vigilance — before acting ships.
 ### T5 — The archive as a concentrated target
 
 - **Live from:** the first capture
-- **Severity:** high, and rising monotonically with use
+- **Severity:** **critical** (raised from high by ADR 0006 D33), rising monotonically with use
 - **Status:** open
 - **Addressed by:** nothing yet
+
+> **Amended 2026-09-20 by ADR 0006 D33.** This entry originally assumed captured
+> content resembled an anonymous crawl. Capturing the *rendered DOM as viewed*
+> makes that false: authenticated, logged-in content enters the archive.
+> Personal email, banking, medical records and internal tools are all
+> capturable, in a way no anonymous crawler could reach. Severity raised
+> accordingly, and O8 (a mandatory domain denylist) becomes pressing rather
+> than optional.
 
 The project deliberately builds a single store of everything the author has
 read. That is the product's value and simultaneously its worst liability: one
@@ -185,6 +195,32 @@ Unlike live browsing, where injection is transient, the archive makes it
 durable. A page read once can attack an agent repeatedly, months later. This is
 a threat the prior art (ArchiveBox, SingleFile) does not have, because their
 output is not fed to a model.
+
+### T11 — Stored scripts execute on later replay
+
+- **Live from:** Phase 2 (D19, a JavaScript engine). Content accumulates from the first capture.
+- **Severity:** high
+- **Status:** open
+- **Addressed by:** nothing yet
+
+A captured DOM may contain `<script>` elements. They are inert in Phase 1,
+which has no JavaScript engine — and become live the moment Phase 2 arrives.
+
+**A page archived today becomes executable code later.** The archive quietly
+accumulates attacker-supplied scripts against the arrival of an engine to run
+them, and the usual defence — "that site was fine when I visited it" — does not
+apply, because the script is preserved regardless of what the site does
+afterwards.
+
+Interacts with T10. Archived content is already durable and replayed into an
+agent's context long after the page is forgotten; T11 extends that from text to
+code.
+
+Candidate mitigations, none decided: strip scripts at capture; store but never
+execute on replay; explicit opt-in per snapshot.
+
+The trigger date is known — it is whenever Phase 2 begins — which makes this a
+scheduled problem rather than a surprise. See Phase gates.
 
 ---
 
