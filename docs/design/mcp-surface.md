@@ -89,9 +89,42 @@ Four candidate advantages, identified but not yet designed:
 > Signatures and schemas. Kept current; this is the contract other things code
 > against.
 
+**Settled so far — three tools, read-only:**
+
+```
+open(url)     -> handle           fetch and parse; nothing is stored
+read(handle)  -> representation   Q1 — return type undecided
+search(query) -> hits             Q5 — hits are handles, or content?
+```
+
+- **Stateless.** Every call names its target. No current page. Costs tokens per
+  call; buys composability, two pages held at once, and the same addressing for
+  live and archived content.
+- **`back` and `forward` are unnecessary**, and fall out of statelessness
+  rather than being cut — the agent still holds earlier handles, so going back
+  is reading something it already has.
+- **No `save`.** Saving is a human action, not a tool (ADR 0006 D38). With it
+  removed, the remaining surface is read-only by nature rather than by
+  restriction.
+- **No `act`.** Follows from the above and from Phase 1 having no JavaScript
+  engine (D18). T4 gates its introduction.
+
+Threat surface per tool:
+
+| Tool | Exposes |
+|---|---|
+| `open` | T2 (SSRF), T1 (parser), T8 (exhaustion), T7 (headless dependency) |
+| `read` | T3 (injection enters agent context) |
+| `search` | T10 (poisoning replayed), T3 |
+
+`open` carries most of the security work: scheme allowlist, address denylist
+re-checked after redirects, size cap, timeout. T2's gate makes it blocking.
+
 ### 2.1 Navigate
 
-<!-- TODO: navigate, back, forward, reload -->
+<!-- TODO: signature and schema for open(); reload? -->
+<!-- back/forward deliberately absent — see above -->
+
 
 ### 2.2 Read
 
@@ -196,9 +229,22 @@ Four candidate advantages, identified but not yet designed:
 - **Q1** — What shape is the read representation? *(§1, blocks everything else)*
 - **Q2** — Can node identity be made stable across re-render, and at what cost?
 - **Q3** — Chunky or chatty tools? *(decide via §5)*
-- **Q4** — Shared or isolated session state?
-- **Q5** — Is the archive queried through the same tools as the live web, or separate ones?
+- **Q4** — Shared or isolated session state? *(cookies and logins — distinct from the stateless/stateful question, which is settled)*
+- **Q5** — Does `search` return handles or content? Handles unify live and archived under one `read`; content splits the surface into two. *(sharpened from "is the archive queried through the same tools")*
 - **Q6** — What does the engine do that a puppeteer genuinely cannot? *(keep re-asking; it's the reason the project exists)*
+- **Q7** — What shape do errors take? `open` fails constantly — 404, timeout, TLS, blocked by the site, refused by the scheme allowlist (T2). The agent must distinguish *gone* from *forbidden* from *retry*, because the correct next action differs. Not a tool; a return shape, and currently blank.
+- **Q8** — What does `read` do with an oversized page? Everything and blow the context window, or truncate and silently lose content? May require a fourth tool, a parameter, or pagination. *(depends on Q1)*
+- **Q9** — Is there a gap for URL lookup? *"Do I have an archived copy of this exact URL?"* is a lookup, not full-text search — and *"have I read this before?"* is a natural and valuable question. Might be `search` with a URL-shaped query, might want its own tool.
+
+> **Q1 keeps surfacing from every direction** — from the tool signatures, from
+> oversized pages, from addressing. That is usually the sign of the genuinely
+> load-bearing question.
+>
+> Proposed method when it is taken up: pick one real page, decide what the ideal
+> `read` response looks like for that page specifically, and generalise from
+> there. Designing the shape top-down tends to produce something tidy that fails
+> on contact. Choose an awkward page — a well-structured article will not stress
+> anything.
 
 ---
 
