@@ -5,6 +5,7 @@
 - **Deciders:** Gabriel
 - **Builds on:** [ADR 0001](0001-browser-as-rust-learning-vehicle.md), [ADR 0002](0002-agent-first-browser-with-context-store.md)
 - **Resolves:** drift between 0001 and 0002 over what this project *is*
+- **Amended by:** [ADR 0008](0008-agents-build-author-specifies-and-reviews.md) — D24's milestones are reached through specifying and reviewing, not authorship. D20 and D22 stand.
 
 ---
 

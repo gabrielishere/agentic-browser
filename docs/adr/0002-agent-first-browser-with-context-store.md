@@ -7,6 +7,7 @@
 - **Resolves:** O1 (purpose), O2 (JavaScript), O3 (GPUI), O4 (reimplement vs assemble). O2–O4 were raised in discussion and not recorded in ADR 0001; the names here are their only record.
 - **Amended by:** [ADR 0003](0003-learning-is-primary-product-framing-is-instrumental.md) — the product language below ("product", "ships", "Phase 1/2") is instrumental, not a commitment. Scope decisions here stay authoritative; where they conflict with the learning goal, ADR 0001 takes priority. See 0003 D23.
 - **Amended by:** [ADR 0007](0007-build-order-and-optional-features.md) D42 — D6 below: store and retrieve become an optional Cargo feature rather than part of every build.
+- **Amended by:** [ADR 0008](0008-agents-build-author-specifies-and-reviews.md) D43 — D15's *write* column means built in this repository, by the agent method, not by hand.
 - **Next:** MCP tool surface design — see O5.
 
 ---
