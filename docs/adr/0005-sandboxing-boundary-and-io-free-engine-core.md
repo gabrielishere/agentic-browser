@@ -99,3 +99,7 @@ sufficient:
   being false, and nothing enforces it automatically. Candidate future
   enforcement: a Dylint lint, or confining the core to its own crate with
   dependencies that make I/O unavailable.
+
+> **2026-09-22, [ADR 0007](0007-build-order-and-optional-features.md) D41:** the
+> crate boundary is adopted; the Dylint candidate is dropped. D32 step 2 is
+> deferred to stage 2 at the earliest.

@@ -1,6 +1,6 @@
 # MCP surface — design
 
-**Status:** Thinking space. The core of §2 is settled; everything else is open.
+**Status:** **Parked** until a working engine exists ([ADR 0007](../adr/0007-build-order-and-optional-features.md) D40). The core of §2 is settled; everything else is open.
 **Last touched:** 2026-09-22
 
 > This is a **living document**, not an ADR. It describes what the contract

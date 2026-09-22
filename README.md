@@ -55,6 +55,9 @@ alternatives.
   browser, so the archive holds post-JavaScript content.
 - Parsing, style, layout and paint perform no I/O, which keeps process
   isolation available as a later refactor rather than a rewrite.
+- Build order: a minimal browser first, then MCP, then further features. MCP
+  and the archive are optional Cargo features of the application, not of the
+  engine.
 
 ## Documentation
 
@@ -75,6 +78,8 @@ few decisions that are cheap now and irreversible later.
 The [MCP surface](docs/design/mcp-surface.md) is the novel contribution. Its
 shape is settled — three stateless, read-only tools — but the read
 representation they return is not.
+Its design is parked until a minimal browser exists
+([ADR 0007](docs/adr/0007-build-order-and-optional-features.md)).
 
 ## Context
 

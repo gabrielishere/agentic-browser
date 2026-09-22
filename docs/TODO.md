@@ -14,89 +14,76 @@ Read in this order:
 
 1. [`README.md`](../README.md) — what this is
 2. [ADR 0002](adr/0002-agent-first-browser-with-context-store.md) — purpose and architecture
-3. [ADR 0006](adr/0006-snapshots-are-rendered-dom.md) — what a snapshot is
-4. [`design/mcp-surface.md`](design/mcp-surface.md) §2 — the tool surface as it stands
+3. [ADR 0007](adr/0007-build-order-and-optional-features.md) — build order: what comes first and why
+4. [ADR 0005](adr/0005-sandboxing-boundary-and-io-free-engine-core.md) D30 — the one structural rule the engine must obey
 
-Everything decided is in `docs/adr/`, D1–D38, contiguous. Everything undecided
+Everything decided is in `docs/adr/`, D1–D42, contiguous. Everything undecided
 is either a `Q` in the MCP design document or an `O` in an ADR.
 
 ---
 
-## Now — finish the MCP surface
+## Now — stage 1: a minimal browser (ADR 0007 D39)
 
-### 1. §1 — the read representation  ← **start here**
+The ADR 0001 ladder, rungs 1–4. Every rung is a program that runs.
 
-**Q1.** The load-bearing question. Blocks Q2, Q8, and half of Q5. It has
-surfaced from every direction we approached the design from, which is the usual
-sign.
+**Before any of it:** ADR 0001 R3 still holds — enough Rust to read the code
+you write. Choose small exercises because they serve the rungs below.
 
-Method agreed: **pick one real page**, decide what the ideal `read` response
-looks like for that page specifically, then generalise. Designing the shape
-top-down produces something tidy that fails on contact. Choose an awkward page
-— a search results page, a GitHub issue, an app-like page. A well-structured
-article will not stress anything.
+### 1. Workspace skeleton
 
-The constraint to hold throughout: whatever `read` returns must double as the
-addressing scheme for any future `act`. Representation and interaction handle
-are one decision.
+`engine`, `net` and `browser` crates per ADR 0007 D42. `engine` depends on no
+networking crate — that is how D30 is enforced.
 
-### 2. §1.1 — prior art
+### 2. Rung 1 — toy engine
 
-Measure against Playwright MCP's snapshot-plus-`ref` scheme, the accessibility
-tree, raw HTML, markdown. Each fails on a different axis; the two nobody has
-are **geometry** and **incremental reads**, which are exactly what owning the
-engine provides.
+HTML subset → DOM, CSS subset, box layout, paint to a window.
 
-### 3. §1.2 — node addressing and identity  *(Q2)*
+- **DOM nodes carry stable ids from the first line** — an arena, not
+  `Rc<RefCell<Node>>` (ADR 0007 D40). The only MCP concern allowed into stage 1.
+- The parser reports stylesheets and images it needs; it does not fetch them
+  (D30, as spelled out in D41).
+- Test against HTML fixture files in the repo, not live pages.
 
-Playwright's refs renumber on every snapshot. Can identity survive re-render?
-Navigation? What happens when an addressed node disappears?
+### 3. Rung 2 — real parsers
 
-### 4. §1.3 — diffs
+Swap in `html5ever`. Decide whether CSS parsing is imported (`cssparser`) or
+written — D15 does not say.
 
-Unit of change, how the agent asks, what happens when its last-known state is
-too old.
+### 4. Rung 3 — real layout, written by hand
 
-### 5. §2 — per-tool signatures
+Block and inline flow, the box model, the D12 subset. D24's milestone:
+*I understand box layout, because mine handles block and inline flow.*
 
-`open` (§2.1) and `read` (§2.2) only. **§2.3 (act) and §2.5 (session) stay
-dormant** while the surface is read-only. §2.4 (archive and recall) depends on
-Q5 and Q9.
+### 5. Rung 4 — real text and paint
 
-Also settle **Q7** here — the error shape. `open` fails constantly and the agent
-must distinguish *gone* from *forbidden* from *retry*.
+`swash` for shaping, `wgpu` for the GPU, `winit` for the window. The D9 human
+surface: URL bar, back and forward, viewport, find-in-page.
 
-### 6. §5 — worked transcripts
-
-**This is the evaluation method for everything above, not a later section.**
-Write a realistic session turn by turn. Flaws invisible in a schema become
-obvious in a transcript. §5.4 (something goes wrong) matters as much as the
-happy paths, and validates Q7.
-
-Q3 (granularity) is decided here, against real transcripts, not in the
-abstract.
-
-### 7. §6 — convert to a pointer
-
-Security content now lives in [`security/threat-model.md`](security/threat-model.md)
-as T1–T11. §6 should reference it, not duplicate it.
+**Gate before step 5 touches real websites:** T1 mitigated and D32 step 1 (a
+separate macOS user) in place — see the [threat model](security/threat-model.md).
 
 ---
 
-## Next — the architecture map
+## Parked — stage 2: MCP (ADR 0007 D40)
 
-Not yet defined. Decide what it means before starting: a module and crate
-layout, a data-flow diagram, the process and I/O boundary from D30, or all
-three.
+Resume with a working engine. The plan as it stood, kept so nothing is lost:
 
-Constraints it must satisfy, already decided:
+1. [`design/mcp-surface.md`](design/mcp-surface.md) §1 — the read representation
+   (**Q1**). Method: pick one awkward real page and design the ideal `read`
+   for it, now against the engine's actual output.
+2. §1.1 prior art, §1.2 node identity (**Q2** — the arena from stage 1 is the
+   starting point), §1.3 diffs.
+3. §2 per-tool signatures for `open` and `read`, and the error shape (**Q7**).
+4. §5 worked transcripts — the evaluation method. **Q3** is decided here.
+5. §6 — convert to a pointer to the threat model.
 
-- **D30** — parse, style, layout and paint perform no I/O
-- **D27** — core is a library, application is a thin shell
-- **D10** — the human UI is a client of the same internal API as the MCP server
-- **D31** — process separation must remain a refactor, not a rewrite
-- **D11** — conventional pipeline: network → parse → style → layout → paint → composite
-- **D13 / D37** — content-addressed blobs plus SQLite; custom container, WARC as export
+Built as the `mcp` Cargo feature. T2 gates the first `open(url)`.
+
+## Parked — stage 3: further features
+
+Engine depth — more of the D12 CSS subset — and the context store as the
+`archive` Cargo feature (ADR 0007 D42). Human features beyond D9 stay out
+unless a new ADR revisits R5.
 
 ---
 
@@ -104,12 +91,14 @@ Constraints it must satisfy, already decided:
 
 | Item | Blocked on |
 |---|---|
-| **O8** — is a domain denylist mandatory? | Gated: must be answered *before the first snapshot is saved*. T5 is now critical |
+| **O8** — is a domain denylist mandatory? | Gated: must be answered *before the first snapshot is saved*. T5 is critical |
 | **O9** — retention policy | Nothing bounds archive growth |
 | **O10** — is pre-JS HTML always stored? | Confirm against real storage cost |
 | **Q4** — shared or isolated session state | Only matters once cookies or logins exist |
 | **T11** — stored scripts | Gated: must be mitigated *before Phase 2 begins* |
 | Anything `act`-shaped | T4 needs a mechanism, not vigilance |
+
+O8–O10 and T11 only arise with the `archive` feature.
 
 ---
 
