@@ -22,6 +22,15 @@ is either a `Q` in the MCP design document or an `O` in an ADR.
 
 ---
 
+## First — make the build pipeline safe
+
+Agents build the code (ADR 0008), so T12 is live before any browser code
+exists. Answer [`design/security.md`](design/security.md) **S1–S3 and S9**
+(machine isolation, agent permissions, dependency approval, a gate before
+Cycle 0) before the first task is dispatched.
+
+---
+
 ## Now — stage 1: a minimal browser (ADR 0007 D39)
 
 The ADR 0001 ladder, rungs 1–4. Every rung is a program that runs.

@@ -1,7 +1,7 @@
 # Threat model
 
 **Status:** Living document. Threats are added as the surface grows.
-**Last touched:** 2026-09-22
+**Last touched:** 2026-09-22 (T12–T15 added)
 
 > Tracks the **attack surface**. Decisions about what to do are recorded in the
 > [ADR series](../adr/) as normal `D`-numbers — one decision sequence, not two.
@@ -10,6 +10,9 @@
 > **Personal use is the higher-risk case, not the lower one.** No security team,
 > no sandbox by default, running on the machine that holds everything else.
 > There is no blast radius because the blast radius is the laptop.
+>
+> The defences against these threats are designed in
+> [`design/security.md`](../design/security.md).
 
 ---
 
@@ -226,6 +229,55 @@ execute on replay; explicit opt-in per snapshot.
 
 The trigger date is known — it is whenever Phase 2 begins — which makes this a
 scheduled problem rather than a surprise. See Phase gates.
+
+### T12 — The agent build pipeline
+
+- **Live from:** the first dispatched task ([ADR 0008](../adr/0008-agents-build-author-specifies-and-reviews.md))
+- **Severity:** critical — arbitrary commands with the author's permissions
+- **Status:** open
+- **Addressed by:** nothing yet. D32 step 1 applies if the agents run under the separate user
+
+The builder agents run `Bash` on the author's account. Three routes to harm,
+none requiring malice from the agent itself: a crate it adds runs build scripts
+and proc-macros at compile time (overlaps T9); text it reads — a README, crate
+documentation, a web page — steers it (prompt injection, as T3 but against the
+builder rather than the browser); and an honest mistake writes, deletes or
+commits outside its task.
+
+Live *now*, before any browser code exists, which makes it the present threat
+rather than a future one.
+
+### T13 — Downloads bypass the operating system's checks
+
+- **Live from:** the first file the browser writes on a page's behalf
+- **Severity:** high
+- **Status:** deferred — no downloads in D9
+- **Addressed by:** D9 (no download feature)
+
+A file written without the macOS quarantine attribute is not checked by
+Gatekeeper when opened. A page-chosen filename can also traverse paths. Real
+browsers set the attribute and sanitise names; nothing here does.
+
+### T14 — Handing URLs to the operating system
+
+- **Live from:** the first link whose scheme the browser does not handle
+- **Severity:** high — launches other applications with page-supplied arguments
+- **Status:** open
+- **Addressed by:** nothing yet
+
+The easy implementation of an unknown scheme is to pass it to `open`, which
+launches whichever application claims it, with arguments the page chose.
+
+### T15 — TLS verification weakened
+
+- **Live from:** the first HTTPS fetch
+- **Severity:** high — any network position can forge any site
+- **Status:** open
+- **Addressed by:** nothing yet
+
+Disabling certificate verification is the common shortcut when a request fails
+during development, and it tends to survive into the code that ships. Using
+`rustls` does not prevent it; it only makes it a visible flag.
 
 ---
 
