@@ -1,5 +1,5 @@
 # Rust
-/target/
+target/
 **/*.rs.bk
 
 # The archive itself — never commit captured pages or the store
