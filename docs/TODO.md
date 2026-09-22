@@ -1,6 +1,6 @@
 # TODO
 
-**Last updated:** 2026-09-20
+**Last updated:** 2026-09-22
 
 > Sequenced work, not an exhaustive list. Open *questions* live in the documents
 > that own them — this file points at them rather than restating them, so the

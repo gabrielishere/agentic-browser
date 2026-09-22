@@ -36,7 +36,7 @@ scope by design; the list is short on purpose.
 
 ## Decisions
 
-### D25 — License: `MIT OR Apache-2.0` *(confirm before first publish)*
+### D25 — License: `MIT OR Apache-2.0` ~~*(confirm before first publish)*~~ *(confirmed 2026-09-20)*
 
 The Rust ecosystem convention, used by the overwhelming majority of crates.
 Permissive, trusted by companies, and Apache-2.0 carries an explicit patent
@@ -109,7 +109,7 @@ Cost: one integer field and a paragraph of documentation, paid once.
 > name stops being optional. It satisfies the criteria below except the first —
 > see the note after them.
 
-O7 remains open. ADR 0002's placeholder reasoning stands: naming before the
+~~O7 remains open.~~ *(Closed — see above.)* ADR 0002's placeholder reasoning stands: naming before the
 thing exists names the wrong thing.
 
 Criteria to apply when deciding, recorded now so the decision is quick later:
@@ -134,7 +134,7 @@ Criteria to apply when deciding, recorded now so the decision is quick later:
 ## Consequences
 
 - Four decisions are settled at near-zero cost. One (D25) needs a deliberate
-  yes.
+  yes. *(Given 2026-09-20.)*
 - None of the above obliges the project to become a product, and ADR 0003 D20
   continues to govern.
 - If a product is ever pursued, that is a change of kind and needs its own ADR

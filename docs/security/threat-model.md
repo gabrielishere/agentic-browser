@@ -1,7 +1,7 @@
 # Threat model
 
 **Status:** Living document. Threats are added as the surface grows.
-**Last touched:** 2026-09-20
+**Last touched:** 2026-09-22
 
 > Tracks the **attack surface**. Decisions about what to do are recorded in the
 > [ADR series](../adr/) as normal `D`-numbers — one decision sequence, not two.
@@ -37,7 +37,7 @@ later", which on a solo part-time project means never.
 | **Before pointing the engine at any real website** | T1 and T2 mitigated. D32 step 1 (separate user account) in place. |
 | **Before the archive stores any authenticated page** | T5 and T6 mitigated. |
 | **Before any `act` tool exists** (click, type, submit) | T4 has a written answer. Not "be careful" — a mechanism. |
-| **Before the repository is public** | T9 reviewed; no secrets in history. |
+| **Before the repository is public** | T9 reviewed; no secrets in history. *Passed 2026-09-22 — see T9.* |
 | **Before the first snapshot is saved** | T5 as amended has an answer — O8 resolved, denylist decided either way. |
 | **Before Phase 2 begins** (a JavaScript engine, D19) | T11 mitigated. Every snapshot already stored is in scope, not just new ones. |
 
@@ -162,7 +162,7 @@ accepted rather than mitigated, since nothing here reduces it.
 - **Live from:** the first agent-driven fetch
 - **Severity:** medium — disk exhaustion, unusable machine
 - **Status:** open
-- **Addressed by:** nothing yet
+- **Addressed by:** D38, partially — only a human can save, so a looping agent cannot fill the archive. Fetch loops and capture size remain unbounded.
 
 An agent in a loop fetching and capturing will fill the disk. No malice
 required; a retry bug is sufficient. Needs bounds on capture size, total store
@@ -179,6 +179,11 @@ Rust crates plus the headless browser. `cargo` pulls transitive dependencies
 that run build scripts at compile time on the dev machine. Relevant to the
 "before the repository is public" gate for the opposite reason too: nothing
 secret should enter the history.
+
+> **History reviewed 2026-09-22.** All 14 commits scanned: no credentials or
+> key material; every commit carries the GitHub noreply identity; the
+> pre-rewrite identity was never pushed. The public gate is passed. T9 itself
+> stays open — its dependency half goes live with the first crate.
 
 ### T10 — Archive poisoning and replay
 

@@ -1,7 +1,7 @@
 # MCP surface — design
 
-**Status:** Thinking space. Nothing here is decided.
-**Last touched:** 2026-09-20
+**Status:** Thinking space. The core of §2 is settled; everything else is open.
+**Last touched:** 2026-09-22
 
 > This is a **living document**, not an ADR. It describes what the contract
 > *is*, and is edited freely as the design moves. When a choice hardens into a
@@ -128,7 +128,7 @@ re-checked after redirects, size cap, timeout. T2's gate makes it blocking.
 
 ### 2.2 Read
 
-<!-- TODO: read current page, read diff, read region? -->
+<!-- TODO: read whole page, read diff, read region? (no "current page" — stateless, see above) -->
 
 ### 2.3 Act
 
@@ -139,10 +139,10 @@ re-checked after redirects, size cap, timeout. T2's gate makes it blocking.
 > The differentiator. No other browser MCP can offer this.
 
 <!-- TODO
-  - search_library(query) — full text over everything captured
+  - search(query) — full text over everything captured
   - related(url) — what was read around this
   - temporal recall — "what was I reading last Tuesday"
-  - explicit capture
+  (No capture tool: saving is a human action, ADR 0006 D38.)
 -->
 
 ### 2.5 Session

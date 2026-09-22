@@ -60,7 +60,7 @@ alternatives.
 
 | | |
 |---|---|
-| [`docs/adr/`](docs/adr/) | Decisions, with rationale. Immutable; superseded rather than edited. |
+| [`docs/adr/`](docs/adr/) | Decisions, with rationale. Never rewritten; superseded by a later ADR, or annotated in place with a dated note. |
 | [`docs/design/`](docs/design/) | Living specifications. Edited freely as the design moves. |
 | [`docs/security/`](docs/security/) | Threat model. Tracks the attack surface; decisions about it live in the ADRs. |
 
@@ -72,8 +72,9 @@ scope, the learning goal sets *how* it is built.
 [ADR 0004](docs/adr/0004-preserve-optionality-toward-product.md) covers the
 few decisions that are cheap now and irreversible later.
 
-The [MCP surface](docs/design/mcp-surface.md) is the novel contribution and is
-currently unspecified.
+The [MCP surface](docs/design/mcp-surface.md) is the novel contribution. Its
+shape is settled — three stateless, read-only tools — but the read
+representation they return is not.
 
 ## Context
 
