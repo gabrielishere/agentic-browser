@@ -1,20 +1,10 @@
 fn main() {
-    // `if` produces a value, so it can go on the right of `let`
-    let year = 2026;
-    let kind = if year % 4 == 0 { "leap" } else { "normal" };
-    println!("{year} is a {kind} year.");
+    let mut s = String::from("hello");
 
-    // `for` over a range: 2024, 2025, ... 2028
-    for y in 2024..=2028 {
-        let kind = if y % 4 == 0 { "leap" } else { "normal" };
-        println!("{y}: {kind}");
-    }
+    let r1 = &s;
+    println!("{r1}"); // r1's last use — done with it before r2 shows up
 
-    // `while` needs a `mut` counter, which is where `mut` earns its keep
-    let mut countdown = 3;
-    while countdown > 0 {
-        println!("{countdown}...");
-        countdown -= 1;
-    }
-    println!("Go!");
+    let r2 = &mut s;
+    r2.push_str(", world");
+    println!("{r2}");
 }

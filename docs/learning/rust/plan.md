@@ -1,6 +1,6 @@
 # Rust learning plan
 
-**Started:** 2026-09-22 · **Updated:** 2026-09-22
+**Started:** 2026-09-22 · **Updated:** 2026-09-24
 
 > Learning Rust well enough to **review** what the agents build ([ADR 0008](../../adr/0008-agents-build-author-specifies-and-reviews.md)
 > D44): explain the mechanism without the code open. Each phase ends with a
@@ -46,10 +46,10 @@ Chapter numbers and titles are taken from the local copy of the Book (Rust 1.98.
 | 1 | Getting Started | ✓ (session 1: install, `cargo new`, `cargo run`) |
 | 2 | Programming a Guessing Game | **skipped for now.** It adds the `rand` crate, the first dependency. Do it deliberately: it's the first time a crate's build scripts run on this machine (T9) |
 | 3 | Common Programming Concepts | ✓ (session 1: variables, `mut`, shadowing, types, functions, control flow). Not yet covered: 3.2's compound types (tuples, arrays) and 3.4 comments |
-| **4** | **Understanding Ownership** | **next.** The idea that makes Rust different |
+| 4 | Understanding Ownership | **in progress** (session 2: moved values, the `Copy` trait, three fixes for use-after-move, references and borrowing — one `&mut` XOR many `&`). **Not yet covered:** 4.3 slices |
 
 **Milestone:** *I can explain why this doesn't compile, and fix it three different ways:*
-using a value after it has been moved.
+using a value after it has been moved. ✓ (session 2)
 
 **Practice:** Rustlings sections `variables`, `functions`, `if`, `primitive_types`,
 `move_semantics`.
