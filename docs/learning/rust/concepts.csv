@@ -1,0 +1,126 @@
+id,source,section,concept,what_it_is,status,session,code_refs
+R01,Book,1.1–1.3,Installing Rust; Cargo basics,"- rustup installs and updates the toolchain
+- cargo new / build / run / check
+- Cargo.toml is the manifest; Cargo.lock pins exact versions",done,s01,
+R02,Book,2,Guessing game: first dependency,"- Adds the rand crate from crates.io
+- cargo fetches, builds and locks it
+- A crate's build script runs on your machine at build time",skipped,,
+R03,Book,3.1,Variables and mutability,"- Bindings are immutable by default; mut opts in
+- Shadowing: let x = …; again makes a new binding, can change type
+- const needs a type and a compile-time value",done,s01,
+R04,Book,3.2,Scalar types,"- Integers i8…i128, u8…u128, isize/usize; f32/f64; bool; char
+- char is a 4-byte Unicode scalar, not a byte
+- Overflowing a literal is a compile error",done,"s01, s02",
+R05,Book,3.2,Compound types: tuples and arrays,"- Tuple: fixed group of mixed types, (x, y)
+- Array: fixed length, one type, [u8; 4]
+- Destructure with let (x, y) = p;",not started,,
+R06,Book,3.3,Functions,"- fn with typed parameters and -> return type
+- Blocks are expressions; the last expression without ; is returned
+- A stray ; turns the return value into ()",done,s01,
+R07,Book,3.4,Comments,"- // line comments
+- /// doc comments become rustdoc (ch 14)",not started,,
+R08,Book,3.5,Control flow,"- if is an expression: let x = if c { a } else { b };
+- loop / while / for; break can return a value
+- Loop labels break out of nested loops",done,s01,
+R09,Book,4.1,Ownership,"- Each value has one owner; dropped when the owner goes out of scope
+- Assigning a non-Copy value moves it; the old name is invalid
+- Copy types (i32, bool, char) are copied instead
+- Fixes for use-after-move: clone, borrow, or stop using the old name",done,s02,
+R10,Book,4.2,References and borrowing,"- &T borrows to read; &mut T borrows to change
+- Many & or exactly one &mut, never both at once
+- The compiler rejects dangling references",done,s02,
+R11,Book,4.3,Slices,"- &str and &[T] are views into data you don't own
+- A slice is a pointer plus a length
+- String literals are &str",not started,,
+R12,Book,5.1–5.2,Structs,"- Named-field structs; tuple structs; unit structs
+- Field init shorthand and ..update syntax
+- #[derive(Debug)] to print them",not started,,
+R13,Book,5.3,Methods and associated functions,"- impl blocks attach behaviour to a type
+- &self reads, &mut self changes, self consumes
+- Associated functions (no self) like Dom::new()",not started,,
+R14,Book,6.1,Enums and Option,"- Each variant can carry its own data
+- Option<T> = Some(T) | None replaces null
+- Enums model 'one of these shapes'",not started,,
+R15,Book,6.2,match,"- Must cover every variant (exhaustive)
+- Arms bind the data inside a variant
+- _ catches the rest",not started,,
+R16,Book,6.3,if let and let…else,"- if let: handle one pattern, ignore the rest
+- let…else: bind or bail out early",not started,,
+R17,Book,7.1,Packages and crates,"- A package has a Cargo.toml and holds crates
+- Library crate (lib.rs) vs binary crate (main.rs)",not started,,
+R18,Book,7.2–7.3,"Modules, paths and privacy","- mod groups code; everything is private by default
+- pub exposes it; crate:: and super:: are paths",not started,,
+R19,Book,7.4,use and re-exports,"- use brings a path into scope
+- pub use re-exports, shaping a crate's public API",not started,,
+R20,Book,7.5,Modules in separate files,"- mod foo; loads foo.rs or foo/mod.rs
+- The file tree mirrors the module tree",not started,,
+R21,Book,8.1,Vec<T>,"- Growable, heap-allocated, contiguous
+- v[i] panics out of range; v.get(i) returns Option
+- Holding a & to an element blocks pushing to the Vec",not started,,
+R22,Book,8.2,String and UTF-8,"- String is owned and growable; &str is borrowed
+- No s[i]: UTF-8 characters vary in byte length
+- Iterate with .chars() or .bytes()",not started,,
+R23,Book,8.3,"HashMap<K, V>","- Key-value store
+- entry() API for insert-or-update
+- Inserting an owned key moves it into the map",not started,,
+R24,Book,9.1,panic!,"- Unrecoverable error: unwinds and stops the thread
+- unwrap() and expect() panic on None or Err",not started,,
+R25,Book,9.2,Result and ?,"- Result<T, E> = Ok(T) | Err(E)
+- ? returns the error to the caller early
+- Map errors into your own error enum",not started,,
+R26,Book,9.3,To panic or not,"- Panic for bugs and broken invariants
+- Return Result for bad input",not started,,
+R27,Book,10.1,Generics,"- Type parameters: fn largest<T>(…)
+- Compiled to one copy per concrete type (monomorphisation)",not started,,
+R28,Book,10.2,Traits,"- Shared behaviour: impl Trait for Type
+- Trait bounds: T: Display
+- derive gives Debug, Clone, PartialEq for free",not started,,
+R29,Book,10.3,Lifetimes,"- 'a names how long a reference stays valid
+- Usually inferred (elision); written when a function returns a borrow
+- A struct holding a & needs a lifetime",not started,,
+R30,Book,11.1,Writing tests,"- #[test] functions
+- assert!, assert_eq!, assert_ne!
+- #[should_panic]; tests returning Result",not started,,
+R31,Book,11.2,Running tests,"- cargo test runs all; filter by name
+- --nocapture shows println! output
+- #[ignore] for slow tests",not started,,
+R32,Book,11.3,Test organisation,"- Unit tests in #[cfg(test)] mod tests, next to the code
+- Integration tests in tests/ use only the public API",not started,,
+R33,Book,12,I/O project: a CLI program,"- Reading arguments and files
+- Splitting main.rs from lib.rs
+- Errors and test-driven development together",not started,,
+R34,Book,13.1,Closures,"- Anonymous functions that capture their surroundings
+- Fn / FnMut / FnOnce depending on how they capture",not started,,
+R35,Book,13.2,Iterators,"- Iterator trait: next() -> Option<Item>
+- Adapters (map, filter, rev) are lazy until collect() or a loop
+- Often as fast as a hand-written loop",not started,,
+R36,Book,"14.1–14.2, 14.4–14.5",Cargo and crates.io,"- Release profiles
+- Publishing and documentation
+- cargo install; extending Cargo",not started,,
+R37,Book,14.3,Cargo workspaces,"- Several crates share one Cargo.lock and target/
+- Members listed in the root Cargo.toml",not started,,
+R38,Book,15.1,Box<T>,"- Owns a value on the heap
+- Lets a type contain itself (recursive types)
+- Box<dyn Trait> holds any type behind one trait",not started,,
+R39,Book,15.4–15.5,Rc<T> and RefCell<T>,"- Rc: shared ownership, reference-counted, one thread
+- RefCell: mutate through & with borrows checked at runtime, panicking on a clash
+- Rc<RefCell<Node>> is the classic tree",not started,,
+R40,Book,15.6,Reference cycles and Weak,"- Rc cycles never free (a leak)
+- Weak<T> points without owning, which breaks the cycle",not started,,
+R41,Book,16,Concurrency,"- Threads; channels for message passing
+- Mutex and Arc for shared state
+- Send and Sync: which types may cross threads",not started,,
+R42,Book,17,Async,"- Futures and async/await
+- An async runtime drives the futures
+- Streams",not started,,
+R43,Book,18,Trait objects,"- dyn Trait: dynamic dispatch
+- Choose behaviour at runtime",not started,,
+R44,Book,19,Patterns and matching,"- Destructuring, guards (if), @ bindings
+- Where patterns can appear",not started,,
+R45,Book,20,Advanced features,"- unsafe and what it allows
+- Advanced traits and types
+- Macros",not started,,
+R46,Book,21,Final project: multithreaded web server,"- TcpListener; parsing HTTP by hand
+- A thread pool",not started,,
+R47,Cargo Book,Features,Cargo features,"- Optional, named parts of a crate
+- Turned on with --features; can pull in optional dependencies",not started,,
