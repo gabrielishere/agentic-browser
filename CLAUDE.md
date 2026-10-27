@@ -8,9 +8,9 @@
 - **Main code:** `docs/adr/` (decisions), `docs/design/` (living specs),
   `docs/security/threat-model.md`, `playground/` (Rust scratch crate). The resume path and
   sequenced work are in `docs/TODO.md`.
-- **Current focus:** answer security S1–S3 and S9 (`docs/design/security.md`), reading items
-  11–16 of `docs/learning/security/reading-list.md` first. Then Cycle 0 (adapt `.claude/`),
-  then Cycle 1 (workspace skeleton).
+- **Current focus:** set up cloud sessions for builder agents (ADR 0009 D46), answer security
+  S3 and S9 (`docs/design/security.md`). Then Cycle 0 (adapt `.claude/`), then Cycle 1
+  (workspace skeleton).
 
 ## Working here
 

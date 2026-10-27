@@ -260,18 +260,18 @@ begins; until then, a pointer.
 
 ## 9. Open questions
 
-- **S1** — Does the separate macOS user (D32 step 1) host the builder agents as well as the browser? *(Recommended: yes — one boundary covers both adversaries.)*
+- **S1** — Does the separate macOS user (D32 step 1) host the builder agents as well as the browser? **Answered for builder agents by [ADR 0009](../adr/0009-builder-agents-run-in-the-cloud.md) D46: no, they run in cloud sessions.** Open for the browser until rung 4.
 - **S2** — What may builder agents execute? The shape of the allowlist, and whether network access is granted beyond `cargo fetch`.
 - **S3** — How is a new dependency approved and recorded — spec `Constraints`, a `cargo-deny` config, or both?
 - **S4** — Is `unsafe` forbidden in this project's own crates?
 - **S5** — When does fuzzing start — rung 1, or once `html5ever` is in (rung 2)?
 - **S6** — Does the human UI refuse local and private addresses, or only the agent surface (consumer agents)?
 - **S7** — Resource limits: the actual numbers, and whether a panic in the engine aborts the process or is caught at the boundary.
-- **S8** — Claude Code's sandboxing and permission modes: complement to the separate user, or replacement for it?
-- **S9** — Should a phase gate precede Cycle 0 — *"before any builder agent runs a build: S1–S3 answered"*?
+- **S8** — Claude Code's sandboxing and permission modes: complement to the separate user, or replacement for it? *In part, ADR 0009: defence in depth for whatever runs locally, not the main boundary.*
+- **S9** — Should a phase gate precede Cycle 0? *After ADR 0009 the gate would read: D46 set up (GitHub App on this repo, `main` protected, cloud network policy set) and S3 answered.*
 - **S10** — Where do security tests live, and how does a spec require them?
 
-> **S1–S3 and S9 are the load-bearing ones** — they concern the adversary that
+> **S2, S3 and S9 are the load-bearing ones** (S1 answered for builder agents by ADR 0009) — they concern the adversary that
 > is live now. Everything in §3 has until rung 4 touches a real website.
 
 ---

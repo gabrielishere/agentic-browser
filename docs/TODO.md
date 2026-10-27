@@ -19,7 +19,7 @@ Read in this order:
 5. [ADR 0008](adr/0008-agents-build-author-specifies-and-reviews.md) — agents build in cycles; the author specifies, reviews and learns
 6. [Rust learning plan](learning/rust/plan.md) — how learning fits each cycle; [concepts.csv](learning/rust/concepts.csv) tracks what has been covered
 
-Everything decided is in `docs/adr/`, D1–D45, contiguous. Everything undecided
+Everything decided is in `docs/adr/`, D1–D47, contiguous. Everything undecided
 is a `Q` in the MCP design document, an `S` in the security design, or an `O`
 in an ADR.
 
@@ -27,10 +27,16 @@ in an ADR.
 
 ## First — make the build pipeline safe
 
-Agents build the code (ADR 0008), so T12 is live before any browser code
-exists. Answer [`design/security.md`](design/security.md) **S1–S3 and S9**
-(machine isolation, agent permissions, dependency approval, a gate before
-Cycle 0) before the first task is dispatched.
+Builder agents write the code (ADR 0008), so T12 is live before any browser
+code exists. [ADR 0009](adr/0009-builder-agents-run-in-the-cloud.md) settles
+where they run: in cloud sessions (D46), with code read before it runs here
+(D47). Before the first task is dispatched:
+
+1. Set up D46: the Claude GitHub App on this repository only, `main`
+   protected, the cloud environment's network policy set (S2).
+2. Answer [`design/security.md`](design/security.md) **S3**: how a new
+   dependency is approved and recorded.
+3. Settle **S9**, the gate before Cycle 0.
 
 Background for those answers: items 11–16 of the
 [security reading list](learning/security/reading-list.md), the build-pipeline
