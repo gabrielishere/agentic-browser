@@ -1,6 +1,6 @@
 # TODO
 
-**Last updated:** 2026-09-22
+**Last updated:** 2026-10-27
 
 > Sequenced work, not an exhaustive list. Open *questions* live in the documents
 > that own them — this file points at them rather than restating them, so the
@@ -16,9 +16,12 @@ Read in this order:
 2. [ADR 0002](adr/0002-agent-first-browser-with-context-store.md) — purpose and architecture
 3. [ADR 0007](adr/0007-build-order-and-optional-features.md) — build order: what comes first and why
 4. [ADR 0005](adr/0005-sandboxing-boundary-and-io-free-engine-core.md) D30 — the one structural rule the engine must obey
+5. [ADR 0008](adr/0008-agents-build-author-specifies-and-reviews.md) — agents build in cycles; the author specifies, reviews and learns
+6. [Rust learning plan](learning/rust/plan.md) — how learning fits each cycle; [concepts.csv](learning/rust/concepts.csv) tracks what has been covered
 
-Everything decided is in `docs/adr/`, D1–D42, contiguous. Everything undecided
-is either a `Q` in the MCP design document or an `O` in an ADR.
+Everything decided is in `docs/adr/`, D1–D45, contiguous. Everything undecided
+is a `Q` in the MCP design document, an `S` in the security design, or an `O`
+in an ADR.
 
 ---
 
@@ -29,14 +32,23 @@ exists. Answer [`design/security.md`](design/security.md) **S1–S3 and S9**
 (machine isolation, agent permissions, dependency approval, a gate before
 Cycle 0) before the first task is dispatched.
 
+Background for those answers: items 11–16 of the
+[security reading list](learning/security/reading-list.md), the build-pipeline
+section. The rest of the list waits for the gate before rung 4.
+
+Then **Cycle 0**: adapt the `.claude/` method to this repository (ADR 0008
+D45). No Rust is built in it.
+
 ---
 
 ## Now — stage 1: a minimal browser (ADR 0007 D39)
 
 The ADR 0001 ladder, rungs 1–4. Every rung is a program that runs.
 
-**Before any of it:** ADR 0001 R3 still holds — enough Rust to read the code
-you write. Choose small exercises because they serve the rungs below.
+**Rust is learned alongside the build, not before it** (from 2026-10-16): each
+cycle's review includes a learning session on the Rust it used. See the
+[plan](learning/rust/plan.md). ADR 0001 R3 still holds; it is met cycle by
+cycle, against D44's bar.
 
 ### 1. Workspace skeleton
 
@@ -114,5 +126,5 @@ O8–O10 and T11 only arise with the `archive` feature.
 ## Housekeeping
 
 - [ ] GitHub → Settings → Emails → **Block command line pushes that expose my email**
-- [ ] Delete `/tmp/agentic-browser-git-backup-*` (pre-rewrite backup, holds the old hostname identity)
+- [x] Delete `/tmp/agentic-browser-git-backup-*` (gone as of 2026-10-27)
 - [ ] Decide whether `docs/design/mcp-surface.md` §4 survives, given statelessness is settled
