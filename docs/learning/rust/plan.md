@@ -1,6 +1,6 @@
 # Rust learning plan
 
-**Started:** 2026-09-22 · **Updated:** 2026-09-24
+**Started:** 2026-09-22 · **Updated:** 2026-10-16
 
 > Learning Rust well enough to **review** what the agents build ([ADR 0008](../../adr/0008-agents-build-author-specifies-and-reviews.md)
 > D44): explain the mechanism without the code open. Each phase ends with a
@@ -9,6 +9,37 @@
 >
 > Worked hands-on in `playground/`, one step at a time. Session notes are in this
 > directory (`session-NN.md`).
+
+---
+
+## How this plan is used (from 2026-10-16)
+
+**Build and learn together, not learn first.** The phases below are no longer
+worked through ahead of the build. Each one is taught **just in time**, as
+part of the cycle that needs it:
+
+1. **Before a cycle:** skim the phase that cycle draws on, enough to read
+   the spec.
+2. **During the cycle's review** (ADR 0008 D45): a deep-dive session on the
+   Rust the cycle actually used, in `playground/` or on the cycle's own code.
+   Notes go in `session-NN.md` as before.
+3. **The merge bar is unchanged** (D44): a cycle merges only when its code
+   can be explained without it open. If it can't, the deep dive isn't
+   finished.
+
+This is the mitigation for ADR 0008 R8 (review is shallower than
+authorship): every cycle's review includes a learning session, rather than
+review alone.
+
+| Cycle | Draws on | Topics expected |
+|---|---|---|
+| 0: adapt the method | — | none; the security answers (S1–S3, S9) come first |
+| 1: workspace skeleton | Phase C | ch 7 modules and crates, ch 11 tests, Cargo |
+| 2: HTML subset → DOM arena | Phase A remainder, Phase B | ch 4.3 slices, 3.2 tuples and arrays, ch 5–6 structs and enums, ch 8 `Vec`, ch 9 `Result` |
+| Parsers onward | Phase C | ch 10 lifetimes and traits |
+| 3–6: CSS, style, layout, paint | Phase D | ch 13 iterators and closures, ch 15 and the arena decision, robinson |
+
+The status of each chapter is still tracked in the tables below.
 
 ---
 
@@ -39,7 +70,7 @@ chapter itself to check them.
 
 Chapter numbers and titles are taken from the local copy of the Book (Rust 1.98.1).
 
-### Phase A: Foundations  ← **current**
+### Phase A: Foundations  ← paused at ch 4.3; the rest is picked up in Cycle 2
 
 | Ch | Title | Status |
 |---|---|---|
