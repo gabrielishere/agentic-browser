@@ -1,7 +1,7 @@
 # Security — design
 
 **Status:** Thinking space. Scoped, not designed. Nothing here is decided.
-**Last touched:** 2026-09-22
+**Last touched:** 2026-10-27 (domains A–D; builder and consumer agents named)
 
 > This is a **living document**, not an ADR, and not the threat model.
 >
@@ -32,20 +32,26 @@ contradict this draft; those are unresolved here until each is worked through.
 > **What stands between a hostile input and the author's machine — and how
 > would we know if it stopped standing there?**
 
-There are two adversaries, live at different times, and it is easy to design
-for the famous one and miss the present one:
+The threats fall into four domains, split by **who is at risk** (defined in the
+[threat model](../security/threat-model.md#domains)). It is easy to design for
+the famous adversary, the hostile web, and miss the present one:
 
-1. **The web, at runtime.** Hostile pages fed to the engine. Live from the first
-   real page fetched (stage 1, rung 4).
-2. **The build pipeline, at development time.** Agents with a shell on the
-   author's account, the crates they pull in, and the text they read. **Live
-   now** — from the first dispatched task (ADR 0008).
+| Domain | Adversary | Who is at risk | Live | Here |
+|---|---|---|---|---|
+| **A. Building it** | Builder agents with a shell on the author's account, the crates they pull in, the text they read | The author's machine | **Now**, from the first dispatched task (ADR 0008) | §2 |
+| **B. Web → engine** | Hostile pages fed to the engine | The machine running the browser | The first real page fetched (stage 1, rung 4) | §3, §6 |
+| **C. Engine → consumer agent** | Pages that try to steer the agent reading them | Whoever's agent uses the browser | Stage 2 (MCP) | §4 |
+| **D. Data at rest** | Anyone who obtains or poisons the archive | The author | Stage 3 | §5 |
 
-A third arrives later: **data at rest** — the archive (stage 3).
+**Builder agents** write this repository's code (`.claude/agents/`). **Consumer
+agents** use the finished browser over MCP. Neither is ever just "agents".
 
 **Personal use is the higher-risk case** (threat model preamble): one machine,
 no security team, and it holds everything else. The design target is therefore
 *containment* — assume something will go wrong, and bound what it can reach.
+Sandboxing is one tool of containment, not the whole of it: the others are
+limiting what a component can do (permissions, read-only tools) and
+controlling what comes in (dependency intake).
 
 ---
 
@@ -69,11 +75,11 @@ the territory.
 
 ---
 
-## 2. The development environment  ← **live now; before Cycle 0**
+## 2. The development environment (domain A)  ← **live now; before Cycle 0**
 
-> The present adversary. Agents run `Bash` with the author's permissions
+> The present adversary. Builder agents run `Bash` with the author's permissions
 > (`.claude/agents/*.md`). Nothing a web page can do to stage 1 compares with
-> what a misdirected agent can do to the machine it runs on.
+> what a misdirected builder agent can do to the machine it runs on.
 >
 > Threats: T9 (supply chain), T12 (agent build pipeline).
 
@@ -81,14 +87,14 @@ the territory.
 
 <!-- TODO
   - D32 step 1 — a separate macOS user. Designed for the browser; covers the
-    agents equally. Does it host both? (S1)
+    builder agents equally. Does it host both? (S1)
   - What that account can reach: no keychain, no SSH keys, no personal files,
     no signed-in cloud accounts. Enumerate and check.
   - Claude Code's own sandboxing / permission modes — complement or
     replacement? (S8)
 -->
 
-### 2.2 Agent permissions
+### 2.2 Builder-agent permissions
 
 <!-- TODO
   - What the implementor and orchestrator may run: an allowlist, not open Bash (S2)
@@ -107,11 +113,11 @@ the territory.
   - Minimum dependency set per crate; `engine` especially (D30, D42)
 -->
 
-### 2.4 What agents read
+### 2.4 What builder agents read
 
 <!-- TODO
   - Prompt injection via READMEs, crate docs, web pages, issue text
-  - Do agents fetch from the web at all during a run? If not, say so in the spec
+  - Do builder agents fetch from the web at all during a run? If not, say so in the spec
   - Fixture pages written for tests are authored content — keep hostile
     fixtures clearly marked (§8)
 -->
@@ -119,14 +125,14 @@ the territory.
 ### 2.5 Repository hygiene
 
 <!-- TODO
-  - Public repo: secrets, identity, and what an agent may commit (T9 gate, passed 2026-09-22)
-  - D45 — agents commit to a cycle branch; only the author merges to `main`
+  - Public repo: secrets, identity, and what a builder agent may commit (T9 gate, passed 2026-09-22)
+  - D45 — builder agents commit to a cycle branch; only the author merges to `main`
   - Nothing pushes except the author
 -->
 
 ---
 
-## 3. The engine at runtime — stage 1
+## 3. The engine at runtime (domain B) — stage 1
 
 > The minimal browser: no JavaScript, no MCP, no archive, no downloads.
 > Remaining surface: URLs, the network, parsers, the GPU, and anything handed
@@ -139,7 +145,7 @@ the territory.
 <!-- TODO
   - Scheme allowlist: `http`, `https` only. `file://`, `data:`, custom schemes refused
   - Re-checked after every redirect (T2)
-  - Local and private address ranges — refused for the human UI too, or only for agents?
+  - Local and private address ranges — refused for the human UI too, or only for consumer agents?
   - Reputation lists — out of scope, or a later feature?
 -->
 
@@ -197,13 +203,13 @@ the territory.
 
 ---
 
-## 4. The agent surface — stage 2  *(dormant)*
+## 4. The agent surface (domain C) — stage 2  *(dormant)*
 
 Designed in [`mcp-surface.md`](mcp-surface.md) §6 and the threat model's T2, T3,
 T4 and T10. This document takes ownership of the *mechanisms* when stage 2
 begins; until then, a pointer.
 
-## 5. The archive — stage 3  *(dormant)*
+## 5. The archive (domain D) — stage 3  *(dormant)*
 
 <!-- TODO when stage 3 begins
   - T5, T6: encryption at rest? file permissions? what an attacker holding the
@@ -213,7 +219,7 @@ begins; until then, a pointer.
   - T11: scripts in stored snapshots
 -->
 
-## 6. JavaScript — phase 2  *(dormant)*
+## 6. JavaScript (domain B) — phase 2  *(dormant)*
 
 <!-- TODO when D19 triggers
   - The exploit class safe Rust removed comes back: QuickJS is C
@@ -254,15 +260,15 @@ begins; until then, a pointer.
 
 ## 9. Open questions
 
-- **S1** — Does the separate macOS user (D32 step 1) host the agents as well as the browser? *(Recommended: yes — one boundary covers both adversaries.)*
-- **S2** — What may agents execute? The shape of the allowlist, and whether network access is granted beyond `cargo fetch`.
+- **S1** — Does the separate macOS user (D32 step 1) host the builder agents as well as the browser? *(Recommended: yes — one boundary covers both adversaries.)*
+- **S2** — What may builder agents execute? The shape of the allowlist, and whether network access is granted beyond `cargo fetch`.
 - **S3** — How is a new dependency approved and recorded — spec `Constraints`, a `cargo-deny` config, or both?
 - **S4** — Is `unsafe` forbidden in this project's own crates?
 - **S5** — When does fuzzing start — rung 1, or once `html5ever` is in (rung 2)?
-- **S6** — Does the human UI refuse local and private addresses, or only the agent surface?
+- **S6** — Does the human UI refuse local and private addresses, or only the agent surface (consumer agents)?
 - **S7** — Resource limits: the actual numbers, and whether a panic in the engine aborts the process or is caught at the boundary.
 - **S8** — Claude Code's sandboxing and permission modes: complement to the separate user, or replacement for it?
-- **S9** — Should a phase gate precede Cycle 0 — *"before any agent runs a build: S1–S3 answered"*?
+- **S9** — Should a phase gate precede Cycle 0 — *"before any builder agent runs a build: S1–S3 answered"*?
 - **S10** — Where do security tests live, and how does a spec require them?
 
 > **S1–S3 and S9 are the load-bearing ones** — they concern the adversary that

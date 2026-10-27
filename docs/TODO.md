@@ -80,7 +80,7 @@ Block and inline flow, the box model, the D12 subset. D24's milestone:
 `swash` for shaping, `wgpu` for the GPU, `winit` for the window. The D9 human
 surface: URL bar, back and forward, viewport, find-in-page.
 
-**Gate before step 5 touches real websites:** T1 mitigated and D32 step 1 (a
+**Gate before step 5 touches real websites:** T1 and T2 mitigated, and D32 step 1 (a
 separate macOS user) in place — see the [threat model](security/threat-model.md).
 
 ---

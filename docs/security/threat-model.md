@@ -1,7 +1,7 @@
 # Threat model
 
 **Status:** Living document. Threats are added as the surface grows.
-**Last touched:** 2026-09-22 (T12–T15 added)
+**Last touched:** 2026-10-27 (domains A–D; builder and consumer agents named)
 
 > Tracks the **attack surface**. Decisions about what to do are recorded in the
 > [ADR series](../adr/) as normal `D`-numbers — one decision sequence, not two.
@@ -16,9 +16,31 @@
 
 ---
 
+## Domains
+
+The threats fall into four domains, split by **who is at risk**. Two kinds of
+agent appear in them, and the documents always say which:
+
+- **Builder agents**: the orchestrator and implementor in `.claude/agents/`,
+  which write this repository's code (ADR 0008).
+- **Consumer agents**: any agent using the finished browser over MCP.
+
+| Domain | Who is at risk | Live from | Threats |
+|---|---|---|---|
+| **A. Building it**: builder agents writing the code | The author's machine | The first dispatched task (now) | T9, T12 |
+| **B. Running it: web → engine** | The machine running the browser | The first real page fetched (rung 4) | T1, T2, T7, T8, T13, T14, T15 |
+| **C. Running it: engine → consumer agent** | Whoever's agent uses the browser | Stage 2 (MCP) | T3, T4, T10 |
+| **D. Running it: data at rest** | The author, and anyone who obtains the archive | Stage 3 (the archive) | T5, T6, T11 |
+
+T2 and T8 are driven by a consumer agent but harm the machine, so they sit in B.
+
+---
+
 ## How to read this
 
 Each threat carries:
+
+- **Domain** — A to D, above.
 
 - **Live from** — the phase at which it becomes real. A threat that is not yet
   live still gets an entry, so it is not discovered late.
@@ -50,6 +72,7 @@ later", which on a solo part-time project means never.
 
 ### T1 — Parser exploitation by hostile input
 
+- **Domain:** B
 - **Live from:** first real page fetched
 - **Severity:** high — process compromise or denial of service on the dev machine
 - **Status:** open
@@ -66,12 +89,13 @@ exploitation. Containment, not prevention.
 
 ### T2 — SSRF and local resource access
 
+- **Domain:** B
 - **Live from:** the first `open(url)` call
 - **Severity:** high — local file disclosure, internal network access
 - **Status:** open
 - **Addressed by:** nothing yet
 
-An agent told "go to this URL" can be pointed at `file:///Users/...`,
+A consumer agent told "go to this URL" can be pointed at `file:///Users/...`,
 `localhost`, `127.0.0.1`, link-local addresses, or internal network ranges. The
 classic vulnerability, exploitable on day one with only a single tool, and
 *more* dangerous here than on a server because the interesting files are on the
@@ -82,25 +106,27 @@ the request is made and again after any redirect.
 
 ### T3 — Prompt injection into agent context
 
+- **Domain:** C
 - **Live from:** the first `read()` returning page content
 - **Severity:** medium while read-only; high once acting is possible
 - **Status:** open
 - **Addressed by:** nothing yet
 
-A page can contain text that reads as instructions. The agent reads pages.
+A page can contain text that reads as instructions. The consumer agent reads pages.
 This is unsolved industry-wide, and no mitigation here should claim otherwise.
 
 While the surface is read-only the consequence is bounded — an injection can
-mislead the agent but cannot make it act. That bound disappears with T4.
+mislead the consumer agent but cannot make it act. That bound disappears with T4.
 
 ### T4 — Injection becomes action
 
+- **Domain:** C
 - **Live from:** the first `act` tool
 - **Severity:** critical
 - **Status:** deferred — gated, see Phase gates
 - **Addressed by:** nothing yet
 
-Once the agent can click and type, attacker-controlled text on a page can cause
+Once the consumer agent can click and type, attacker-controlled text on a page can cause
 attacker-chosen actions. If session sharing is ever enabled (§4 of the MCP
 design, Q4), those actions are taken **as the user**, with their logins.
 
@@ -109,6 +135,7 @@ one that must have a real mechanism — not vigilance — before acting ships.
 
 ### T5 — The archive as a concentrated target
 
+- **Domain:** D
 - **Live from:** the first capture
 - **Severity:** **critical** (raised from high by ADR 0006 D33), rising monotonically with use
 - **Status:** open
@@ -132,6 +159,7 @@ least dangerous on the day it is built and most dangerous years later.
 
 ### T6 — Session credentials at rest
 
+- **Domain:** D
 - **Live from:** the first stored cookie or login
 - **Severity:** critical
 - **Status:** open
@@ -147,6 +175,7 @@ respected for this reason as much as for the architectural one.
 
 ### T7 — Headless browser dependency
 
+- **Domain:** B
 - **Live from:** first capture (D18 — capture via headless browser)
 - **Severity:** high
 - **Status:** accepted, with the reason recorded
@@ -162,17 +191,19 @@ accepted rather than mitigated, since nothing here reduces it.
 
 ### T8 — Resource exhaustion
 
-- **Live from:** the first agent-driven fetch
+- **Domain:** B
+- **Live from:** the first fetch driven by a consumer agent
 - **Severity:** medium — disk exhaustion, unusable machine
 - **Status:** open
-- **Addressed by:** D38, partially — only a human can save, so a looping agent cannot fill the archive. Fetch loops and capture size remain unbounded.
+- **Addressed by:** D38, partially — only a human can save, so a looping consumer agent cannot fill the archive. Fetch loops and capture size remain unbounded.
 
-An agent in a loop fetching and capturing will fill the disk. No malice
+A consumer agent in a loop fetching and capturing will fill the disk. No malice
 required; a retry bug is sufficient. Needs bounds on capture size, total store
 size, and request rate.
 
 ### T9 — Supply chain
 
+- **Domain:** A
 - **Live from:** the first dependency
 - **Severity:** high
 - **Status:** open
@@ -190,22 +221,24 @@ secret should enter the history.
 
 ### T10 — Archive poisoning and replay
 
+- **Domain:** C
 - **Live from:** the first `search()` over stored content
 - **Severity:** medium
 - **Status:** open
 - **Addressed by:** nothing yet
 
 Non-obvious, and specific to this design. Injected content captured today is
-**stored**, and replayed into an agent's context on some later search — long
+**stored**, and replayed into a consumer agent's context on some later search — long
 after the page is forgotten and the original context is gone.
 
 Unlike live browsing, where injection is transient, the archive makes it
-durable. A page read once can attack an agent repeatedly, months later. This is
+durable. A page read once can attack a consumer agent repeatedly, months later. This is
 a threat the prior art (ArchiveBox, SingleFile) does not have, because their
 output is not fed to a model.
 
 ### T11 — Stored scripts execute on later replay
 
+- **Domain:** D
 - **Live from:** Phase 2 (D19, a JavaScript engine). Content accumulates from the first capture.
 - **Severity:** high
 - **Status:** open
@@ -220,8 +253,8 @@ them, and the usual defence — "that site was fine when I visited it" — does 
 apply, because the script is preserved regardless of what the site does
 afterwards.
 
-Interacts with T10. Archived content is already durable and replayed into an
-agent's context long after the page is forgotten; T11 extends that from text to
+Interacts with T10. Archived content is already durable and replayed into a
+consumer agent's context long after the page is forgotten; T11 extends that from text to
 code.
 
 Candidate mitigations, none decided: strip scripts at capture; store but never
@@ -232,10 +265,11 @@ scheduled problem rather than a surprise. See Phase gates.
 
 ### T12 — The agent build pipeline
 
+- **Domain:** A
 - **Live from:** the first dispatched task ([ADR 0008](../adr/0008-agents-build-author-specifies-and-reviews.md))
 - **Severity:** critical — arbitrary commands with the author's permissions
 - **Status:** open
-- **Addressed by:** nothing yet. D32 step 1 applies if the agents run under the separate user
+- **Addressed by:** nothing yet. D32 step 1 applies if the builder agents run under the separate user
 
 The builder agents run `Bash` on the author's account. Three routes to harm,
 none requiring malice from the agent itself: a crate it adds runs build scripts
@@ -249,6 +283,7 @@ rather than a future one.
 
 ### T13 — Downloads bypass the operating system's checks
 
+- **Domain:** B
 - **Live from:** the first file the browser writes on a page's behalf
 - **Severity:** high
 - **Status:** deferred — no downloads in D9
@@ -260,6 +295,7 @@ browsers set the attribute and sanitise names; nothing here does.
 
 ### T14 — Handing URLs to the operating system
 
+- **Domain:** B
 - **Live from:** the first link whose scheme the browser does not handle
 - **Severity:** high — launches other applications with page-supplied arguments
 - **Status:** open
@@ -270,6 +306,7 @@ launches whichever application claims it, with arguments the page chose.
 
 ### T15 — TLS verification weakened
 
+- **Domain:** B
 - **Live from:** the first HTTPS fetch
 - **Severity:** high — any network position can forge any site
 - **Status:** open
@@ -286,7 +323,7 @@ during development, and it tends to survive into the code that ships. Using
 <!-- Park here rather than losing it -->
 
 - Tool-specific threats, pending the minimal toolset (MCP design §2)
-- Multi-agent / concurrent session interactions
+- Several consumer agents, or concurrent sessions, interacting
 - What an attacker who obtains the archive file can do with it
 - Update and patch strategy for the headless browser dependency
 - Whether MCP transport itself (stdio vs HTTP) introduces exposure
