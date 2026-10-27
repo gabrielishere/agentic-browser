@@ -22,3 +22,6 @@ target/
 # Editor
 /.idea/
 /.vscode/
+
+# Claude Code local permissions (per machine)
+.claude/settings.local.json
