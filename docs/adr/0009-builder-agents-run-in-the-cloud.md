@@ -57,6 +57,16 @@ apply.
 - Builder agents push to the cycle branch only (D45). `main` is protected on
   GitHub so that this is enforced, not agreed.
 
+> **2026-10-29, set up and smoke-tested:** a cloud session pushes as the
+> author, not as a separate identity. With admins exempt from the `main` rule,
+> its push to `main` was accepted (`6ef15bb`, an empty commit, left in place).
+> The rule now applies to admins too, so the author's own changes reach `main`
+> by pull request as well. **Still open:** acting as the author, an agent could
+> open a pull request and merge it. A required approval cannot close this,
+> since GitHub does not let an author approve their own pull request. Closing
+> it needs a separate, lower-permission identity for builder agents. Until
+> then, "merged by Gabriel" (D45) is agreed, not enforced.
+
 ### D47 — Code is read before it runs here
 
 The cloud contains the agent; it does not contain the code. A cycle branch
