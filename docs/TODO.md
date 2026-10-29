@@ -1,6 +1,6 @@
 # TODO
 
-**Last updated:** 2026-10-27
+**Last updated:** 2026-10-29
 
 > Sequenced work, not an exhaustive list. Open *questions* live in the documents
 > that own them — this file points at them rather than restating them, so the
@@ -32,11 +32,19 @@ code exists. [ADR 0009](adr/0009-builder-agents-run-in-the-cloud.md) settles
 where they run: in cloud sessions (D46), with code read before it runs here
 (D47). Before the first task is dispatched:
 
-1. Set up D46: the Claude GitHub App on this repository only, `main`
-   protected, the cloud environment's network policy set (S2).
+1. ~~Set up D46: the Claude GitHub App on this repository only, `main`
+   protected, the cloud environment's network policy set (S2).~~ Done
+   2026-10-29; see the dated note under D46. Open: an agent acting as the
+   author could merge its own pull request.
 2. Answer [`design/security.md`](design/security.md) **S3**: how a new
    dependency is approved and recorded.
-3. Settle **S9**, the gate before Cycle 0.
+3. Decide **D48**: agent-written code never lands on this machine's main
+   account. The local clone is a sparse checkout (docs, specs, ADRs); crates
+   are built and tested only in the cloud, and run locally only as the
+   separate macOS user (D32 step 1). Cycle branches are reviewed remotely.
+   This changes how D47 works, so it needs a dated note or ADR 0010.
+4. Settle **S9**, the gate before Cycle 0: D46 set up, S3 answered, D48
+   decided.
 
 Background for those answers: items 11–16 of the
 [security reading list](learning/security/reading-list.md), the build-pipeline
