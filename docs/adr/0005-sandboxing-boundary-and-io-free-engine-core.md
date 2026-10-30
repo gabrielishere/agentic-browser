@@ -103,3 +103,7 @@ sufficient:
 > **2026-09-22, [ADR 0007](0007-build-order-and-optional-features.md) D41:** the
 > crate boundary is adopted; the Dylint candidate is dropped. D32 step 2 is
 > deferred to stage 2 at the earliest.
+
+> **2026-10-30, [ADR 0010](0010-agent-written-code-never-runs-on-the-authors-account.md) D48:** step 1 is needed
+> earlier, before rung 1 is first run locally, since agent-written code now
+> runs on this machine only as the separate user.
