@@ -1,6 +1,6 @@
 # Rust learning plan
 
-**Started:** 2026-09-22 · **Updated:** 2026-10-16
+**Started:** 2026-09-22 · **Updated:** 2026-11-09
 
 > Learning Rust well enough to **review** what the agents build ([ADR 0008](../../adr/0008-agents-build-author-specifies-and-reviews.md)
 > D44): explain the mechanism without the code open. Each phase ends with a
@@ -16,7 +16,10 @@
 
 **Build and learn together, not learn first.** The phases below are no longer
 worked through ahead of the build. Each one is taught **just in time**, as
-part of the cycle that needs it:
+part of the cycle that needs it.
+
+**The cycles set the topics, never the reverse:** a spec is written for the
+engineering, and this plan adjusts to it.
 
 1. **Before a cycle:** skim the phase that cycle draws on, enough to read
    the spec.
