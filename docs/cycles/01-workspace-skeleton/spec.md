@@ -30,12 +30,16 @@ first build.
   The root `Cargo.toml` is a virtual manifest: a workspace with no package of its own.
 - **Dependencies:** none from crates.io. The only dependencies are path dependencies
   between the three members (`browser` → `engine`, `browser` → `net`). No dev-dependencies.
+  T2's temporary `serde = "1"` edits are the one exception: they exist only to test the
+  check, are read with `cargo metadata --no-deps --offline` (nothing is fetched, `Cargo.lock`
+  is not touched), and are reverted, never committed.
 - **`engine` code:** no `std::fs`, `std::net`, `std::process`, `std::env` (D30). Tests in
   `engine` take their input as literals; they do not read files.
 - **`deny.toml` is not edited.** If `cargo deny check` fails, the task stops and reports.
 - **Commands this run may use:** `cargo build`, `cargo test`, `cargo run`, `cargo tree`,
   `cargo metadata`, `cargo install --locked cargo-deny`, `cargo deny check`,
-  `bash scripts/check-engine.sh`, and `git` for staging and committing. Network: crates.io
+  `bash scripts/check-engine.sh`, and `git` for staging, committing and read-only checks
+  (`git status`, `git diff`, `git ls-files`). Network: crates.io
   only (ADR 0011 D52); nothing is fetched from anywhere else except by `cargo deny check`'s
   own advisory database (see T3).
 - **No code beyond the skeleton.** No DOM, parser, window or networking code: each crate's
@@ -73,11 +77,16 @@ import, and show that it fails when it should.
 **Deliverables:**
 - CREATE `scripts/check-engine.sh`
 
-**Evidenced by:** `bash scripts/check-engine.sh` exiting 0 on the workspace; then, on
+**Evidenced by:** `bash scripts/check-engine.sh` exiting 0 on the workspace. Then, on
 temporary edits that are reverted afterwards and never committed, a non-zero exit for each
-of: `engine` depending on `net`; a `use std::fs;` line in `crates/engine/src/lib.rs`; a
-`use std::{collections::HashMap, env};` line there. Report each exit code and the
-script's message.
+of: `engine` depending on `net`; `engine` depending on `serde = "1"` (not on the
+allowlist); `net` added to the allowlist and depended on (still refused); and, in
+`crates/engine/src/lib.rs`, `use std::fs;`, `use std::process;`, a `std::net::Ipv4Addr`
+path with no `use`, a `std::fs::read(…)` call, and a `use std::{ collections::HashMap,
+env, };` group spread over four lines. An exit of 0 for each of: `use
+std::collections::HashMap;` there, and `serde = "1"` as a dev-dependency (rule 1 covers
+normal dependencies only). Afterwards `Cargo.lock` is unchanged. Report each exit code and
+the script's message.
 
 ## T3 — Dependency policy runs
 **Objective:** Install `cargo-deny` and run it against the workspace.
@@ -86,7 +95,9 @@ script's message.
 **Deliverables:**
 - none: this task produces evidence, not files.
 
-**Evidenced by:** `cargo deny check` exiting 0. If it cannot fetch its advisory database
+**Evidenced by:** `cargo deny check` exiting 0, with advisories, bans, licenses and sources
+each reported ok; `git diff --exit-code -- deny.toml` exiting 0; `git ls-files
+--error-unmatch Cargo.lock` exiting 0. If it cannot fetch its advisory database
 (it is downloaded from GitHub, `rustsec/advisory-db`, which ADR 0011 records as unverified
 behind the GitHub proxy), report the error verbatim and stop. Do not work around it, and do
 not edit `deny.toml`.

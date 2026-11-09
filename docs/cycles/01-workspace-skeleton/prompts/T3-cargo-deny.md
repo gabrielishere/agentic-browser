@@ -11,8 +11,12 @@ so that policy runs from the first build.
 
 # Outcome
 `cargo deny check` passes on the workspace with `deny.toml` unchanged.
-- **Evidenced by:** `cargo deny check` exits 0, and its output shows the four checks
-  (advisories, bans, licenses, sources) each reported as ok.
+- **Evidenced by:**
+  1. `cargo deny check` exits 0, and its output shows the four checks (advisories, bans,
+     licenses, sources) each reported as ok.
+  2. `git diff --exit-code -- deny.toml` exits 0 (the policy was not edited to pass).
+  3. `git ls-files --error-unmatch Cargo.lock` exits 0 (the lockfile it checked is
+     committed, O4).
 
 # Task context
 - `deny.toml` is at the repository root. It allows crates.io as the only source and a list of
@@ -24,6 +28,7 @@ so that policy runs from the first build.
 # Instructions
 1. Run `cargo install --locked cargo-deny`.
 2. Run `cargo deny check`.
+3. Run evidence items 2 and 3.
 
 # Constraints
 - Do not edit `deny.toml` or any file in the workspace. This task writes nothing.
@@ -33,4 +38,4 @@ so that policy runs from the first build.
 
 # Response format
 The `cargo install` result line, then the full output of `cargo deny check` and its exit
-code. No other prose.
+code, then the exit codes of evidence items 2 and 3. No other prose.
