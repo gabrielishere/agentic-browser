@@ -1,0 +1,50 @@
+{
+  "seq": 1,
+  "spec": "01-workspace-skeleton",
+  "task": "T1",
+  "dispatched": true,
+  "prompt": "docs/cycles/01-workspace-skeleton/prompts/T1-workspace.md",
+
+  "started": "2026-11-09T19:28:19Z",
+  "ended": "2026-11-09T19:28:56Z",
+  "duration_s": 37,
+
+  "model":  { "requested": "claude-sonnet-5-5", "actual": "claude-sonnet-5-5" },
+  "usage":  { "turns": 2, "input": 4, "output": 1386,
+              "cache_write": 11339, "cache_read": 9396 },
+
+  "gate":   { "passed": true, "defect": null },
+
+  "deliverables": [
+    { "path": "Cargo.toml", "found": true, "symbols": [] },
+    { "path": "crates/engine/Cargo.toml", "found": true, "symbols": [] },
+    { "path": "crates/engine/src/lib.rs", "found": true,
+      "symbols": [ { "name": "name", "found": true, "line": 2 } ] },
+    { "path": "crates/net/Cargo.toml", "found": true, "symbols": [] },
+    { "path": "crates/net/src/lib.rs", "found": true,
+      "symbols": [ { "name": "name", "found": true, "line": 2 } ] },
+    { "path": "crates/browser/Cargo.toml", "found": true, "symbols": [] },
+    { "path": "crates/browser/src/main.rs", "found": true,
+      "symbols": [ { "name": "main", "found": true, "line": 1 } ] },
+    { "path": "Cargo.lock", "found": true, "symbols": [] }
+  ],
+
+  "evidence": [
+    { "command": "cargo build --workspace",
+      "exit": 0, "summary": "Finished `dev` profile [unoptimized + debuginfo] target(s)", "verbatim": null },
+    { "command": "cargo test --workspace",
+      "exit": 0, "summary": "engine: test result: ok. 1 passed; 0 failed; net: test result: ok. 1 passed; 0 failed (2 total, +2 from 0)", "verbatim": null },
+    { "command": "cargo run -q -p browser",
+      "exit": 0, "summary": "agentic-browser", "verbatim": null },
+    { "command": "cargo tree -p engine",
+      "exit": 0, "summary": "engine v0.1.0 (/home/user/agentic-browser/crates/engine) — nothing beneath", "verbatim": null },
+    { "command": "cargo tree -p browser",
+      "exit": 0, "summary": "browser v0.1.0 with engine v0.1.0 and net v0.1.0 beneath", "verbatim": null },
+    { "command": "cargo metadata --format-version 1 --no-deps",
+      "exit": 0, "summary": "3 members: engine [lib] deps [], net [lib] deps [], browser [bin] deps [engine, net]; all edition 2024, MIT OR Apache-2.0, publish []", "verbatim": null }
+  ],
+
+  "status": { "run": "DONE", "deliverables": "MADE", "outcome": "PASSED" },
+  "commits": { "deliverables": "8440a8b", "log": null },
+  "escalations": []
+}
