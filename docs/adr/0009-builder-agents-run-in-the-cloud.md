@@ -77,6 +77,11 @@ Before a cycle branch is built locally, its new crates and its `Cargo.lock`
 diff are reviewed. S3 decides how that review is recorded. Until it does, no
 cycle branch that adds a dependency is built on this machine.
 
+> **2026-10-30, [ADR 0010](0010-agent-written-code-never-runs-on-the-authors-account.md) D48:** the mechanism is replaced.
+> Opening a branch in the editor runs its build scripts, so reading here is
+> running here. Cycle branches are now reviewed on GitHub and never checked
+> out on this account. S3 is answered by D49.
+
 ---
 
 ## Rejected

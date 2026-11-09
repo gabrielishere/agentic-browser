@@ -1,6 +1,6 @@
 # TODO
 
-**Last updated:** 2026-10-29
+**Last updated:** 2026-10-30
 
 > Sequenced work, not an exhaustive list. Open *questions* live in the documents
 > that own them — this file points at them rather than restating them, so the
@@ -19,7 +19,7 @@ Read in this order:
 5. [ADR 0008](adr/0008-agents-build-author-specifies-and-reviews.md) — agents build in cycles; the author specifies, reviews and learns
 6. [Rust learning plan](learning/rust/plan.md) — how learning fits each cycle; [concepts.csv](learning/rust/concepts.csv) tracks what has been covered
 
-Everything decided is in `docs/adr/`, D1–D47, contiguous. Everything undecided
+Everything decided is in `docs/adr/`, D1–D50, contiguous. Everything undecided
 is a `Q` in the MCP design document, an `S` in the security design, or an `O`
 in an ADR.
 
@@ -36,22 +36,21 @@ where they run: in cloud sessions (D46), with code read before it runs here
    protected, the cloud environment's network policy set (S2).~~ Done
    2026-10-29; see the dated note under D46. Open: an agent acting as the
    author could merge its own pull request.
-2. Answer [`design/security.md`](design/security.md) **S3**: how a new
-   dependency is approved and recorded.
-3. Decide **D48**: agent-written code never lands on this machine's main
-   account. The local clone is a sparse checkout (docs, specs, ADRs); crates
-   are built and tested only in the cloud, and run locally only as the
-   separate macOS user (D32 step 1). Cycle branches are reviewed remotely.
-   This changes how D47 works, so it needs a dated note or ADR 0010.
-4. Settle **S9**, the gate before Cycle 0: D46 set up, S3 answered, D48
-   decided.
+2. ~~Answer **S3**: how a new dependency is approved and recorded.~~
+   [ADR 0010](adr/0010-agent-written-code-never-runs-on-the-authors-account.md)
+   D49, 2026-10-30.
+3. ~~Decide **D48**: agent-written code never lands on this machine's main
+   account.~~ ADR 0010 D48, 2026-10-30. The local clone is a sparse checkout;
+   cycle branches are reviewed on GitHub.
+4. ~~Settle **S9**, the gate before Cycle 0.~~ ADR 0010 D50: passed
+   2026-10-30. The merge gap is accepted as R11.
 
 Background for those answers: items 11–16 of the
 [security reading list](learning/security/reading-list.md), the build-pipeline
 section. The rest of the list waits for the gate before rung 4.
 
-Then **Cycle 0**: adapt the `.claude/` method to this repository (ADR 0008
-D45). No Rust is built in it.
+**Next — Cycle 0**: adapt the `.claude/` method to this repository (ADR 0008
+D45), and add `deny.toml` (D49). No Rust is built in it.
 
 ---
 
@@ -96,6 +95,7 @@ surface: URL bar, back and forward, viewport, find-in-page.
 
 **Gate before step 5 touches real websites:** T1 and T2 mitigated, and D32 step 1 (a
 separate macOS user) in place — see the [threat model](security/threat-model.md).
+Under D48, D32 step 1 is needed earlier: before rung 1 is first run locally.
 
 ---
 

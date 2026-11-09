@@ -8,9 +8,8 @@
 - **Main code:** `docs/adr/` (decisions), `docs/design/` (living specs),
   `docs/security/threat-model.md`, `playground/` (Rust scratch crate). The resume path and
   sequenced work are in `docs/TODO.md`.
-- **Current focus:** set up cloud sessions for builder agents (ADR 0009 D46), answer security
-  S3 and S9 (`docs/design/security.md`). Then Cycle 0 (adapt `.claude/`), then Cycle 1
-  (workspace skeleton).
+- **Current focus:** Cycle 0 (adapt `.claude/`, add `deny.toml`), then Cycle 1 (workspace
+  skeleton). The gate before Cycle 0 passed on 2026-10-30 (ADR 0010).
 
 ## Working here
 
@@ -22,4 +21,7 @@
   `session-NN.md`; update `status`/`session` in `concepts.csv` and fill `code_refs` only with
   real paths, once the code exists.
 - Agents build in cycles (ADR 0008 D45): one spec, one branch, merged by Gabriel after review.
+- **This clone is a sparse checkout** (ADR 0010 D48): `docs/`, `.claude/`, `playground/` and
+  the root files. Never widen it or disable it: agent-written crates are reviewed on GitHub and
+  built only in the cloud or as the separate macOS user.
 - The GitHub repo is **public**. Commit when asked; push only on an explicit OK.
