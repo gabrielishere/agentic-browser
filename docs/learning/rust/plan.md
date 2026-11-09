@@ -7,7 +7,7 @@
 > milestone stated that way, and each phase is tied to the build cycle it prepares
 > you to review.
 >
-> Worked hands-on in `playground/`, one step at a time. Session notes are in this
+> Sessions 1–2 were worked in a `playground/` crate, since removed (2026-11-09). Session notes are in this
 > directory (`session-NN.md`).
 
 ---
@@ -24,7 +24,7 @@ engineering, and this plan adjusts to it.
 1. **Before a cycle:** skim the phase that cycle draws on, enough to read
    the spec.
 2. **During the cycle's review** (ADR 0008 D45): a deep-dive session on the
-   Rust the cycle actually used, in `playground/` or on the cycle's own code.
+   Rust the cycle actually used, on the cycle's own code.
    Notes go in `session-NN.md` as before.
 3. **The merge bar is unchanged** (D44): a cycle merges only when its code
    can be explained without it open. If it can't, the deep dive isn't
@@ -61,7 +61,7 @@ Carol Nichols and Chris Krycho, with contributions from the Rust community.
 | robinson: a toy browser engine in Rust | [github.com/mbrubeck/robinson](https://github.com/mbrubeck/robinson) | see [prior art](../../research/prior-art.md) |
 
 **Version match.** The online Book targets Rust 1.90 or later and the 2024 edition. The
-local copy matches the installed Rust (1.98.1). The playground uses `edition = "2024"`.
+local copy matches the installed Rust (1.98.1). The workspace uses `edition = "2024"`.
 
 **How session 1 was taught.** The steps followed the order of topics in Book chapter 3,
 but were written from general knowledge, not taken from the Book's text. Read the
@@ -121,7 +121,7 @@ proves and what it doesn't.*
 |---|---|
 | Ch 13: Functional Language Features: Iterators and Closures | Tree walks in style and layout |
 | Ch 15: Smart Pointers | `Rc<RefCell<…>>`, and **why ADR 0007 D40 chose an arena instead** |
-| robinson, parts 1–7 | Retype the DOM and parser in the playground, then compare with the agents' version |
+| robinson, parts 1–7 | Read the DOM and parser, then compare with the agents' version |
 | [Web Browser Engineering](https://browser.engineering/), early chapters | The same pipeline explained in Python, which you already know |
 
 **Milestone:** *I can predict what the layout code does to a fixture before running
