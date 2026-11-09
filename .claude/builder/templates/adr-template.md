@@ -5,9 +5,10 @@ description: One architecture decision — what forced it, what was chosen, what
 
 # Architecture Decision Record template
 
-One decision per record. Immutable once accepted: a decision that turns out wrong
-is **superseded** by a new record, never edited, because the reasoning that looked
-sound at the time is the thing worth keeping.
+One question per record; a record may hold several numbered decisions (`D<n>`) that
+answer it together. Never rewritten once accepted: a decision that turns out wrong is
+**superseded** by a new record, or annotated in place with a dated note, because the
+reasoning that looked sound at the time is the thing worth keeping.
 
 **An ADR answers a question no other document does.** The spec says what to
 build; the log says what happened; an ADR says *why this way and not the
@@ -20,17 +21,17 @@ an ADR, and the third column says where it goes instead.
 
 | Ask | If no | It goes |
 |---|---|---|
-| **1. Is it about the system?** | it is about how the work gets done — the runner, the verification discipline, the commit boundary | with the trade rules, wherever this repository keeps them. Never `decisions/` |
+| **1. Is it about the system, or about how this project is built?** | it is a routine rule of the trade: a naming habit, a formatting choice | with the trade rules in this method (`.claude/`) |
 | **2. Was there a real alternative?** | a constraint forced the answer | a line in the spec's `Constraints`, citing what forced it |
 | **3. Does it outlive the task?** | it is an implementation choice | nowhere, or a comment |
 
 Then the sanity check the questions serve: **would someone six months from now ask "why is
 it like this?"**
 
-Question 1 is the one that gets missed, and it costs the most. A decision about *how we
-work* filed among decisions about the *system* stops being scrutinised as process — nobody
-reading a directory of domain decisions thinks to ask what one of them costs per task. Put
-it beside the trade rules and that question is unavoidable.
+Question 1 differs from the method's default here. In this repository, decisions about
+how the work is done are ADRs too, in the same series as decisions about the browser
+(ADR 0008–0010 are examples). They are scrutinised as process because they are written as
+decisions with alternatives and costs, not because they are filed apart.
 
 Question 2 catches the record that inflates a forced choice into a deliberation. If a
 stated constraint already settles it, the honest artefact is one line naming the
@@ -41,11 +42,12 @@ constraint, not a page of rejected alternatives that were never available.
 ---
 
 ````markdown
-# ADR-<nnn> — <short title, the decision itself>
+# ADR <nnnn> — <short title, the decision itself>
 
-**Date:** <YYYY-MM-DD>
-**Status:** proposed · accepted · superseded by ADR-<nnn>
-**Affects:** <spec ids, tasks, or components this bears on — omit if general>
+- **Status:** Proposed · Accepted · Superseded by ADR <nnnn>
+- **Date:** <YYYY-MM-DD>
+- **Deciders:** Gabriel
+- **Affects:** <cycle spec ids (e.g. `01-workspace-skeleton`), tasks, or crates this bears on; omit if general>
 
 ## Context
 <What forced the decision. The situation, the constraint, the failure. If it came
@@ -53,8 +55,9 @@ out of a run, cite the run record: "T3 FAILED — evidence showed …". State th
 facts that were true at the time, not the conclusion.>
 
 ## Decision
-<What was chosen, stated as a position: "We will …". One decision. If there are
-two, there are two records.>
+<What was chosen, stated as a position: "We will …". Each decision gets the next
+number in the series, `### D<n> — <title>`, contiguous across all ADRs: check the
+last one in `docs/adr/` before adding.>
 
 ## Alternatives
 <What else was considered, and why each was rejected. A record with no rejected

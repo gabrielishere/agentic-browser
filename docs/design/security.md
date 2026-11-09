@@ -261,7 +261,7 @@ begins; until then, a pointer.
 ## 9. Open questions
 
 - **S1** — Does the separate macOS user (D32 step 1) host the builder agents as well as the browser? **Answered for builder agents by [ADR 0009](../adr/0009-builder-agents-run-in-the-cloud.md) D46: no, they run in cloud sessions.** Open for the browser until rung 4.
-- **S2** — What may builder agents execute? The shape of the allowlist, and whether network access is granted beyond `cargo fetch`.
+- **S2** — What may builder agents execute? The shape of the allowlist, and whether network access is granted beyond `cargo fetch`. **Answered by [ADR 0011](../adr/0011-what-builder-agents-may-reach.md) D51–D52: the VM is the boundary, commands are named per spec, and a cycle session reaches crates.io only.**
 - **S3** — How is a new dependency approved and recorded — spec `Constraints`, a `cargo-deny` config, or both? **Answered by [ADR 0010](../adr/0010-agent-written-code-never-runs-on-the-authors-account.md) D49: both. The spec approves direct dependencies; `deny.toml` restricts sources and checks advisories; `Cargo.lock` is reviewed in the pull request.**
 - **S4** — Is `unsafe` forbidden in this project's own crates?
 - **S5** — When does fuzzing start — rung 1, or once `html5ever` is in (rung 2)?

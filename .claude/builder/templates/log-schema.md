@@ -29,7 +29,7 @@ never restates their content.
 ## Layout
 
 ```
-.spec-artifacts/logs/<spec-id>/
+docs/cycles/<spec-id>/logs/
 └── runs/
     ├── 001-T1.json
     ├── 002-T2.json
@@ -51,7 +51,7 @@ files may name the same task.
   "spec": "<spec-id>",
   "task": "T3",
   "dispatched": true,
-  "prompt": ".spec-artifacts/prompts/<spec-id>/T3-<name>.md",
+  "prompt": "docs/cycles/<spec-id>/prompts/T3-<name>.md",
 
   "started": "2026-09-12T23:28:00Z",
   "ended": "2026-09-12T23:34:00Z",
@@ -64,13 +64,15 @@ files may name the same task.
   "gate":   { "passed": true, "defect": null },
 
   "deliverables": [
-    { "path": "src/service.py", "found": true,
-      "symbols": [ { "name": "_parse_granularity", "found": true, "line": 42 } ] }
+    { "path": "engine/src/dom.rs", "found": true,
+      "symbols": [ { "name": "Arena::insert", "found": true, "line": 42 } ] }
   ],
 
   "evidence": [
-    { "command": "python3 -m unittest discover -s tests -v",
-      "exit": 0, "summary": "Ran 50 tests, OK (+12 from 38)", "verbatim": null }
+    { "command": "cargo test -p engine",
+      "exit": 0, "summary": "test result: ok. 50 passed; 0 failed (+12 from 38)", "verbatim": null },
+    { "command": "cargo deny check",
+      "exit": 0, "summary": "advisories ok, bans ok, licenses ok, sources ok", "verbatim": null }
   ],
 
   "status": { "run": "DONE", "deliverables": "MADE", "outcome": "PASSED" },
@@ -81,7 +83,7 @@ files may name the same task.
 
 **`verbatim` is `null` on success and carries the full output on failure.** A summary of a
 *failing* test result is the thing the evidence existed to replace, so a failure is
-reproduced exactly. A pass is already one line — `Ran 50 tests … OK` — and pasting more of
+reproduced exactly. A pass is already one line — `test result: ok. 50 passed` — and pasting more of
 it buys nothing.
 
 **A refused dispatch is a record.** `dispatched: false`, `status.run: "REFUSED"`,

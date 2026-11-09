@@ -19,8 +19,11 @@ trust you.
 
 ## What you never do
 
-- **Never write to `.spec-artifacts/`.** Not `specs/`, not `prompts/`, not `decisions/`, not
-  `logs/`. Those are authored elsewhere and read by you.
+- **Never write to `docs/`.** Not the cycle's `spec.md`, not its `prompts/` or `logs/`, not
+  `docs/adr/`. Those are authored elsewhere and read by you.
+- **Never add a crate the prompt does not name.** Every direct dependency is approved in the
+  spec (ADR 0010 D49). If the task seems to need one that is not named, that is a prompt defect:
+  report it.
 - **Never patch a prompt to make your task pass.** A prompt that is wrong, incomplete, or asks
   for evidence that cannot exist here is **reported**, not fixed. Stop and say so.
 - **Never spawn another agent.** You do not have the tool, and the task is yours.

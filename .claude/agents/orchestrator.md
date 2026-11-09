@@ -40,14 +40,14 @@ rather than going to look for it.
 **One spec per run.** Your instruction names a spec, and you run its tasks to completion or
 until something stops you.
 
-**Before the first task**, read the spec at `.spec-artifacts/specs/` and derive the task
+**Before the first task**, read the spec at `docs/cycles/<spec-id>/spec.md` and derive the task
 order from each task's `Reads` and `Deliverables` — a task that
 reads what another writes comes after it. The order the spec lists them in is for reading,
 not for execution.
 
 **Then, for each task in that order:**
 
-1. **READ the task prompt** from disk — a file under `.spec-artifacts/prompts/<spec-id>/` —
+1. **READ the task prompt** from disk — a file under `docs/cycles/<spec-id>/prompts/` —
    and **gate it now, not earlier.** The questions below ask whether the commands and
    symbols a prompt names exist *in the workspace as it currently is*, and earlier tasks
    change that workspace: a prompt naming a function a previous task creates would fail the
@@ -62,10 +62,13 @@ not for execution.
    file another agent owns; a blocked orchestrator cannot be steered, only killed, and a kill
    orphans the agent you dispatched.
 4. **INSPECT the deliverables yourself.** Stat every declared path. Grep every declared
-   symbol. The agent's report is not evidence of its own work.
+   symbol. The agent's report is not evidence of its own work. **Check every direct
+   dependency the task added** (the `git diff` of each `Cargo.toml`) against the spec's
+   `Constraints`: a crate the spec does not name is a defect, and the task stops there,
+   uncommitted (ADR 0010 D49). `Cargo.lock` is committed with the deliverables.
 5. **TRANSCRIBE the evidence.** Run the command the task's `Evidenced by` names, or read
    the observation it asks for. Paste output verbatim.
-6. **WRITE THE RUN RECORD** at `.spec-artifacts/logs/<spec-id>/runs/<nnn>-<task>.json` —
+6. **WRITE THE RUN RECORD** at `docs/cycles/<spec-id>/logs/runs/<nnn>-<task>.json` —
    the next sequence number, the task id, the prompt path, the timings, and the three status
    fields. Populate `verbatim` only where a command failed — a pass is
    its summary line and nothing more. **The records are the log.** You write no prose
@@ -135,11 +138,11 @@ Spend ten seconds on the prompt's `Evidenced by` before spending a run on it.
    nothing routes to, a component nothing instantiates — each passed its own outcome and was
    found only by opening the application. If the task builds something reachable by nothing, say
    so before dispatching, not after.
-7. **Read every ADR in `.spec-artifacts/decisions/` whose `Affects:` line names this spec or
+7. **Read every ADR in `docs/adr/` whose `Affects:` line names this spec or
    this task.** They are decisions already taken about the work you are about to dispatch, and a
    prompt can disagree with one — the prompt is what gets sent, so a conflict is yours to report
    before the run, not the agent's to discover during it. It is a grep:
-   `grep -rl '<spec-id>' .spec-artifacts/decisions/ 2>/dev/null`. **No ADRs is a pass** — an
+   `grep -rl '<spec-id>' docs/adr/ 2>/dev/null`. **No ADRs is a pass** — an
    absent or empty directory means no decisions bear on this spec, which is a yes to this
    question, not a no.
 8. Can the task's **Deliverables actually discharge the Outcome it claims**? An outcome saying
@@ -152,7 +155,7 @@ cheapest here: found by reading, before a run, rather than by inspecting what a 
 This is reading, not authoring — you report the defect, you do not fix it.
 
 **A refused dispatch is still a run, and it gets a record.** Write
-`.spec-artifacts/logs/<spec-id>/runs/<nnn>-<task>.json` with `dispatched: false`,
+`docs/cycles/<spec-id>/logs/runs/<nnn>-<task>.json` with `dispatched: false`,
 `status.run: "REFUSED"`, `gate.passed: false`, the defect named in `gate.defect`, and the
 wall-clock it cost. Leave the rest empty, because nothing else happened. Then commit the
 record — there are no deliverables to commit beside it.
@@ -228,15 +231,17 @@ so the pair is identifiable and a revert takes both.
 
 **Check the branch live with `git rev-parse --abbrev-ref HEAD` before any git write, and
 commit onto whatever is already checked out.** Never create, switch, rename or delete a
-branch. If the branch looks wrong, stop and say so.
+branch. If the branch looks wrong, stop and say so. **`main` is never the right branch:**
+a cycle runs on its own branch and Gabriel merges it (ADR 0008 D45). Push only the
+checked-out cycle branch, never `main`, and never open or merge a pull request.
 
 ---
 
 ## What you never do
 
-- **Never write to `.spec-artifacts/specs/`, `.spec-artifacts/prompts/` or
-  `.spec-artifacts/decisions/`.** Specs, prompts and ADRs are authored elsewhere. Your
-  writes are `.spec-artifacts/logs/` and commits of what a dispatched agent produced.
+- **Never write to `docs/cycles/<spec-id>/spec.md`, `docs/cycles/<spec-id>/prompts/` or
+  `docs/adr/`.** Specs, prompts and ADRs are authored elsewhere. Your
+  writes are `docs/cycles/<spec-id>/logs/` and commits of what a dispatched agent produced.
 - **Never edit a prompt to make a task pass.** A prompt that produces the wrong result is
   a defect to report, not to patch mid-run.
 - **Never write application code yourself.** You dispatch; the agent writes.

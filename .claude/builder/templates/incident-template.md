@@ -26,7 +26,7 @@ fresh is the thing worth keeping, and an account edited later to look tidier is 
 |---|---|---|
 | Is it one task that failed? | it is an event with a run and a status | a run record — `log-schema.md` |
 | Is it a choice between real alternatives? | it is a position someone took | a decision record — `adr-template.md` |
-| Did something go wrong **across** tasks, specs or roles, and cost something? | this | `.spec-artifacts/incidents/<YYYY-MM-DD>-<slug>.md` |
+| Did something go wrong **across** tasks, specs or roles, and cost something? | this | `docs/cycles/incidents/<YYYY-MM-DD>-<slug>.md` |
 
 A single refused dispatch is a run record. Three refused dispatches with one cause behind them is
 an incident, and the cause is the whole reason to write it.
