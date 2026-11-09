@@ -32,14 +32,14 @@ task is mechanical however long it looks.
 
 ## 2. Match the task to a model
 
-Ordered by capability and cost. **`claude-opus-5` is the default** — choose
+Ordered by capability and cost. **`claude-opus-5-5` is the default** — choose
 another only when the task clearly sits above or below it.
 
 | Task shape | Model | Dispatches as | Context | $/1M in → out | Typical work |
 |---|---|---|---|---|---|
-| Mechanical, high-volume, closed output | `claude-haiku-4-5` | `haiku` | 200K | $1 → $5 | Extraction against a fixed schema, classification into a known label set, reformatting, sub-agent tasks |
-| Everyday coding and analysis | `claude-sonnet-5` | `sonnet` | 1M | $2 → $10 | One well-specified module, a data transformation, ordinary agentic tool use |
-| Complex agentic or enterprise work — **default** | `claude-opus-5` | `opus` | 1M | $5 → $25 | Multi-file changes, large refactors, complex systems work, long-horizon autonomous coding |
+| Mechanical, high-volume, closed output | `claude-haiku-5-5` | `haiku` | 200K | $1 → $5 | Extraction against a fixed schema, classification into a known label set, reformatting, sub-agent tasks |
+| Everyday coding and analysis | `claude-sonnet-5-5` | `sonnet` | 1M | $2 → $10 | One well-specified module, a data transformation, ordinary agentic tool use |
+| Complex agentic or enterprise work — **default** | `claude-opus-5-5` | `opus` | 1M | $5 → $25 | Multi-file changes, large refactors, complex systems work, long-horizon autonomous coding |
 | Highest capability | `claude-fable-5-1` | `fable` | 1M | $10 → $50 | Sessions running for hours, multistep research, analysis carried through to a finished document or deck |
 
 Use the ID strings exactly as written — they are complete. Never append a date
@@ -58,7 +58,7 @@ meaning anything.
 no cheap correction from below — an under-powered model produces a plausible bad
 result that costs more to diagnose than the tier upgrade would have cost.
 
-**Watch the context column.** Long source material rules out `claude-haiku-4-5`
+**Watch the context column.** Long source material rules out `claude-haiku-5-5`
 regardless of how mechanical the task is.
 
 ---
@@ -68,3 +68,6 @@ regardless of how mechanical the task is.
 fetched 2026-09-06. Model IDs, context windows and prices are a snapshot taken
 2026-06-24 and go stale — re-check them against the source above before relying
 on a price.*
+
+*2026-11-09: model IDs updated to the current generation. The context and price columns
+were not re-checked and may be out of date.*
