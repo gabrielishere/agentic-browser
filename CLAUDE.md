@@ -8,8 +8,8 @@
 - **Main code:** `docs/adr/` (decisions), `docs/design/` (living specs),
   `docs/security/threat-model.md`, `playground/` (Rust scratch crate). The resume path and
   sequenced work are in `docs/TODO.md`.
-- **Current focus:** Cycle 0 (adapt `.claude/`, add `deny.toml`), then Cycle 1 (workspace
-  skeleton). The gate before Cycle 0 passed on 2026-10-30 (ADR 0010).
+- **Current focus:** Cycle 1 (workspace skeleton). Cycle 0 is done (ADR 0011, `deny.toml`);
+  set the cloud environment's network access first (ADR 0011 D52).
 
 ## Working here
 

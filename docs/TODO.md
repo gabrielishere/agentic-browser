@@ -1,6 +1,6 @@
 # TODO
 
-**Last updated:** 2026-10-30
+**Last updated:** 2026-11-09
 
 > Sequenced work, not an exhaustive list. Open *questions* live in the documents
 > that own them — this file points at them rather than restating them, so the
@@ -19,7 +19,7 @@ Read in this order:
 5. [ADR 0008](adr/0008-agents-build-author-specifies-and-reviews.md) — agents build in cycles; the author specifies, reviews and learns
 6. [Rust learning plan](learning/rust/plan.md) — how learning fits each cycle; [concepts.csv](learning/rust/concepts.csv) tracks what has been covered
 
-Everything decided is in `docs/adr/`, D1–D50, contiguous. Everything undecided
+Everything decided is in `docs/adr/`, D1–D53, contiguous. Everything undecided
 is a `Q` in the MCP design document, an `S` in the security design, or an `O`
 in an ADR.
 
@@ -49,8 +49,12 @@ Background for those answers: items 11–16 of the
 [security reading list](learning/security/reading-list.md), the build-pipeline
 section. The rest of the list waits for the gate before rung 4.
 
-**Next — Cycle 0**: adapt the `.claude/` method to this repository (ADR 0008
-D45), and add `deny.toml` (D49). No Rust is built in it.
+~~**Cycle 0**: adapt the `.claude/` method to this repository (ADR 0008
+D45), and add `deny.toml` (D49).~~ Done 2026-11-09: cycle artifacts live in
+`docs/cycles/<spec-id>/`, decisions in `docs/adr/`, S2 answered by ADR 0011.
+
+**Before Cycle 1:** set the cloud environment to **Custom** network access with
+`crates.io`, `index.crates.io` and `static.crates.io` only (ADR 0011 D52).
 
 ---
 

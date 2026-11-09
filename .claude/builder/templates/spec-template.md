@@ -50,7 +50,10 @@ interfaces that must not change. Not coding standards — those are standing
 context. Not reasons — those are ADRs.
 
 Name what the run must be permitted to do — the commands its tasks give as evidence.
-A permission granted for earlier work is not a permission this spec has.>
+A permission granted for earlier work is not a permission this spec has.
+
+Name every direct dependency the cycle may add, crate by crate. Approving the spec
+approves the crate; a task adds no crate not named here (ADR 0010 D49).>
 
 - <…>
 
