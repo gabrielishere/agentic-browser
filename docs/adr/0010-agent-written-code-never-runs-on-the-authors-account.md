@@ -38,6 +38,10 @@ in the editor" is configuration. Not having the code on disk is construction.
   (D32 step 1), which clones and builds it there.
 - `playground/` is the author's own code and stays local.
 
+> **2026-11-09:** `playground/` removed, along with learn-first study (see the
+> [Rust plan](../learning/rust/plan.md)). The sparse checkout is now `docs/`,
+> `.claude/` and the root files. A scratch crate, when wanted, lives outside the repo.
+
 This replaces D47's mechanism. Its intent, that code is read before it reaches
 the author's files, is now true by construction.
 
